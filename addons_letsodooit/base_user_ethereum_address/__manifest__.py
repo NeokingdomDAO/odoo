@@ -1,0 +1,15 @@
+{
+    'name': 'Base User Ethereum Address',
+    'author': 'Peter Schwarz (info@peter-schwarz.it)',
+    'version': '16.0.1.0.1',
+    'category': 'Base',
+    'sequence': 1,
+    'description': """This module adds an ethereum address to users.""",
+    'license': 'OPL-1',
+    'depends': ['base'],
+    'data': ['views/res_users_views.xml'],
+    'qweb': [],
+    'installable': True,
+    'auto_install': False,
+    'application': True,
+}

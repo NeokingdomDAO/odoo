@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_search_form_extended" model="ir.ui.view">
+        <field name="name">project.task.search.form.extended.approval</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form_extended"></field>
+        <field name="arch" type="xml">
+            <filter name="my_tasks" position="after">
+                <filter string="My Approvals" name="my_approvals" domain="[('approval_user_id', '=', uid)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_task_form2" model="ir.ui.view">
+        <field name="name">project.task.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <button name="action_assign_to_me" position="before">
+                <field name="is_approval_stage" invisible="1"/>
+                <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': &quot;['|', ('is_approval_stage', '=', False), ('approval_user_id', '!=', uid)]&quot;}"/>
+            </button>
+            <field name="user_ids" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="partner_phone" position="after">
+                <field name="user_id"/>
+                <field name="approval_user_id"/>
+                <field name="approval_date" readonly="1" attrs="{'invisible': [('approval_date', '=', False)]}"/>
+            </field>
+            <xpath expr="//page[@name='sub_tasks_page']//field[@name='user_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sub_tasks_page']//field[@name='user_ids']" position="attributes">
+                <fiedl name="user_id"/>
+                <field name="approval_user_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

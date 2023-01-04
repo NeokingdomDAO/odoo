@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tiers_form" model="ir.ui.view">
+        <field name="name">account.analytic.tier.form</field>
+        <field name="model">account.analytic.tier</field>
+        <field name="arch" type="xml">
+            <form string="Tier">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="token_per_hour"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tiers_tree" model="ir.ui.view">
+        <field name="name">account.analytic.tier.tree</field>
+        <field name="model">account.analytic.tier</field>
+        <field name="arch" type="xml">
+            <tree string="Tiers">
+                <field name="name"/>
+                <field name="token_per_hour"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_tiers">
+        <field name="name">Tiers</field>
+        <field name="res_model">account.analytic.tier</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="job_id" position="after">
+                <field name="tier_id"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem action="analytic_tier.action_view_tiers" id="menu_action_view_tiers" parent="hr.menu_human_resources_configuration" sequence="100"/>
+</odoo>
