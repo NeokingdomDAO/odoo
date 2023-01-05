@@ -15,7 +15,7 @@ class AccountAnalyticLine(models.Model):
     def search_overlapping_ids(self, date_criteria):
         self.ensure_one()
         day_after_start = self.date + relativedelta(days=1)
-        search_criteria = [('start', '>=', self.date), ('start', '<', day_after_start), ('id', '!=', self.id), ('employee_id', '=', self.employee_id.id)]
+        search_criteria = [('id', '!=', self.id), ('employee_id', '=', self.employee_id.id)]
         search_criteria.extend(date_criteria)
         return self.search(search_criteria)
 
