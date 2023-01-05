@@ -8,16 +8,6 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one(required=True)
     task_id = fields.Many2one(required=True)
 
-    @api.constrains('task_id.user_ids')
-    def check_no_time_tracked(self):
-        raise UserError(_("You cannot reassign a task after time has been tracked!"))
-
-    @api.constrains('task_id.stage_id')
-    def check_pre_final_stage(self):
-        for line in self:
-            if line.task_id.stage_id.is_pre_final() and line.name == '/':
-                raise UserError(_('Please set a proper description to every timesheet entry before setting this task to done!'))
-
     def search_overlapping_ids(self, date_criteria):
         self.ensure_one()
         day_after_start = self.date + relativedelta(days=1)
