@@ -7,4 +7,5 @@ class Task(models.Model):
 
     @api.onchange('user_id')
     def onchange_user_id(self):
-        self.tier_id = self.user_id.tier_id
+        employee_id = self.env['hr.employee'].search([('user_id', '=', self.user_id.id)], limit=1)
+        self.tier_id = employee_id.tier_id
