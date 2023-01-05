@@ -15,7 +15,7 @@ class AccountAnalyticLine(models.Model):
     @api.constrains('task_id.stage_id')
     def check_pre_final_stage(self):
         for line in self:
-            if line.task_id.stage_id.is_pre_final() and line.description == '/':
+            if line.task_id.stage_id.is_pre_final() and line.name == '/':
                 raise UserError(_('Please set a proper description to every timesheet entry before setting this task to done!'))
 
     def search_overlapping_ids(self, date_criteria):
