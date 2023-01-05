@@ -5,7 +5,7 @@
     'sequence': 1,
     'description': """This module provides some basic constraints to HR timesheets to ensure data cleanness.""",
     'license': 'OPL-1',
-    'depends': ['hr_timesheet'],
+    'depends': ['hr_timesheet', 'project_task_type_attribution'],
     'data': [],
     'installable': True,
     'auto_install': False,
