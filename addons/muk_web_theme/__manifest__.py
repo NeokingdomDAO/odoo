@@ -43,7 +43,7 @@
 {
     'name': 'MuK Backend Theme', 
     'summary': 'Odoo Community Backend Theme',
-    'version': '16.0.1.0.1', 
+    'version': '16.0.1.0.4', 
     'category': 'Themes/Backend', 
     'license': 'LGPL-3', 
     'author': 'MuK IT',
@@ -79,6 +79,7 @@
         ],
         'web.assets_backend': [
             'muk_web_theme/static/src/core/**/*.xml',
+            'muk_web_theme/static/src/core/**/*.scss',
             'muk_web_theme/static/src/core/**/*.js',
             'muk_web_theme/static/src/webclient/**/*.xml',
             'muk_web_theme/static/src/webclient/**/*.scss',

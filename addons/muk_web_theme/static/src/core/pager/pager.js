@@ -83,9 +83,8 @@ patch(Pager.prototype, 'muk_web_theme.Pager', {
     	return session.pager_autoload_interval || 30000;
     },
     getAutoloadTooltip() {
-      console.log('test')
     	return JSON.stringify({
-    		active: this.autoLoadState && this.autoLoadState.active,
+    		active: this.autoLoadState.active,
     		interval: this.getAutoLoadIntervalTimeout() / 1000,
     		autoload: this.checkAutoLoadAvailability(),
     	});
@@ -111,7 +110,6 @@ patch(Pager.prototype, 'muk_web_theme.Pager', {
     	browser.localStorage.removeItem(
             this.getAutoLoadStorageKey()
         );
-      console.log('test')
     	if (this.checkAutoLoadAvailability()) {
         	this.autoLoadState.active = !this.autoLoadState.active;
         	if (this.autoLoadState.active) {
