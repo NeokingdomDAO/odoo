@@ -113,11 +113,14 @@ export const websiteService = {
                     contentWindow = null;
                     return;
                 }
-                // Not all files have a dataset. (e.g. XML)
-                if (!document.documentElement.dataset) {
+                const { dataset } = document.documentElement;
+                // XML files have no dataset on Firefox, and an empty one on
+                // Chrome.
+                const isWebsitePage = dataset && dataset.websiteId;
+                if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = document.documentElement.dataset;
+                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
                     const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
                         menu.dataset.menu_name,
                         menu.dataset.content_menu_id,
@@ -186,7 +189,11 @@ export const websiteService = {
                 invalidateSnippetCache = value;
             },
 
-            goToWebsite({ websiteId, path, edition, translation } = {}) {
+            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+                if (lang) {
+                    invalidateSnippetCache = true;
+                    path = `/website/lang/${lang}?r=${encodeURIComponent(path)}`;
+                }
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
                     additionalContext: {

@@ -5,18 +5,18 @@
 # Translators:
 # Martin Trigaux, 2022
 # 陕西_jack, 2022
-# 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,34 +25,35 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "1 Meeting"
 msgstr "1次会议"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
 msgstr "<b>点击查看</b>申请。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr "<b>您是通过发送电子邮件申请的吗？</b>检查收到的申请。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr "<b>拖拽这张卡片</b>，让他有资格参加第一次面试。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -62,7 +63,7 @@ msgstr ""
 "<div><b>尝试</b>向申请人<b>发送电子邮件</b>。</div><div><i>提示。所有发送或接收的电子邮件都保存在这里的历史记录中</i>"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -911,6 +912,7 @@ msgid "Attachments"
 msgstr "附件"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Attachments, like resumes, get indexed automatically."
@@ -932,24 +934,8 @@ msgid "Bachelor Degree"
 msgstr "本科"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -1018,7 +1004,7 @@ msgid "Category of applicant"
 msgstr "申请人类别"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
@@ -1054,6 +1040,7 @@ msgid "Confirmation email sent to all new job applications"
 msgstr "发送给所有新工作申请的确认电子邮件"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
@@ -1061,6 +1048,7 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Contact Email"
@@ -1092,7 +1080,7 @@ msgid "Contract Signed"
 msgstr "合同已签署"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
@@ -1115,7 +1103,7 @@ msgid "Create a Job Position"
 msgstr "创建职位"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
@@ -1276,6 +1264,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -1297,6 +1286,7 @@ msgid "Documentation"
 msgstr "文档"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1356,6 +1346,7 @@ msgid "Email cc"
 msgstr "邮件抄送"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
@@ -1367,12 +1358,14 @@ msgid "Email subject for applications sent via email"
 msgstr "通过电子邮件发送的申请的电子邮件主题"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
 msgstr "必须选择电子邮件模板来发送邮件"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
@@ -1631,24 +1624,8 @@ msgid ""
 msgstr "如果启用字段设为false，它对信息进行隐藏但不删除它。"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1695,6 +1672,7 @@ msgid "Is Warning Visible"
 msgstr "警告是否清晰可见"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1704,6 +1682,7 @@ msgid "Job"
 msgstr "工作"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
@@ -1801,6 +1780,7 @@ msgid "Language"
 msgstr "语言"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Last Meeting"
@@ -1860,6 +1840,7 @@ msgid "Late Activities"
 msgstr "最近的活动"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Let people apply by email to save time."
@@ -1872,7 +1853,7 @@ msgid "Let's create a job position."
 msgstr "让我们创建一个工作职位"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -1881,7 +1862,7 @@ msgid ""
 msgstr "让我们来创建这个职位。如果您使用网站应用程序，将为申请设置一个电子邮件，以及一个公开的职位描述。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
@@ -1889,21 +1870,21 @@ msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr "让我们来看看如何<b>改进</b>您的<b>招聘过程</b>。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
 msgstr "让我们看一下应用通道。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
 msgstr "现在让我们创建这个新的员工。"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s go back to the dashboard."
@@ -2085,24 +2066,28 @@ msgid "Next Activity Type"
 msgstr "下一活动类型"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Next Meeting"
 msgstr "下一次会议"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Meeting"
 msgstr "无会议"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No application yet"
@@ -2180,7 +2165,7 @@ msgstr "Odoo帮助您在招聘过程中跟踪申请人及跟进所有操作：�
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer : Manage all applicants"
-msgstr "干事 ： 管理所有申请人"
+msgstr "主管 ： 管理所有申请人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
@@ -2219,7 +2204,7 @@ msgstr ""
 "object.partner_id.lang }}."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
@@ -2299,24 +2284,8 @@ msgid "Publish available jobs on your website"
 msgstr "在网站上发布现有职位"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -2423,6 +2392,7 @@ msgid "Refuse"
 msgstr "拒绝"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
@@ -2528,7 +2498,7 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "公司推荐的工资标准"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
@@ -2565,6 +2535,7 @@ msgid "Send CV to OCR to fill applications"
 msgstr "将简历发送到 OCR 以填写申请"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
@@ -2602,7 +2573,7 @@ msgid "Send texts to your contacts"
 msgstr "向您的联系人发送短信"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
@@ -2637,6 +2608,11 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
 msgstr "来源"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_source_menu
+msgid "Source Analysis"
+msgstr "来源分析"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -2752,6 +2728,12 @@ msgid "Tags"
 msgstr "标签"
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_team_menu
+msgid "Team Performance"
+msgstr "团队绩效"
+
+#. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_campaign.py:0
 #, python-format
 msgid ""
@@ -2775,6 +2757,7 @@ msgid "The date at which the applicant will be available to start working"
 msgstr "求职者可以开始上班的日期"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid ""
@@ -2783,6 +2766,7 @@ msgid ""
 msgstr "由于以下申请人没有电子邮件地址，该邮件将不会发送给他们。"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
@@ -2844,6 +2828,11 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr "当此阶段中没有任何记录要呈现时，将在看板视图中被收藏。"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_stage_report_menu
+msgid "Time In Stage Analysis"
+msgstr "阶段分析时间"
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2961,7 +2950,7 @@ msgid "Website communication history"
 msgstr "网上沟通记录"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
@@ -2979,6 +2968,7 @@ msgid "Write your message here..."
 msgstr "在这里写下您的留言..."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
@@ -2994,6 +2984,7 @@ msgstr ""
 "        默认的标签。"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_source.py:0
 #, python-format
 msgid ""
@@ -3004,6 +2995,7 @@ msgstr ""
 "%(recruitment_sources)s"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."

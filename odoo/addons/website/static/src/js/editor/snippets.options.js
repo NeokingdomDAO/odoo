@@ -3,7 +3,7 @@ odoo.define('website.editor.snippets.options', function (require) {
 
 const {ColorpickerWidget} = require('web.Colorpicker');
 var core = require('web.core');
-const { loadBundle } = require("@web/core/assets");
+const { loadBundle, loadCSS } = require("@web/core/assets");
 var Dialog = require('web.Dialog');
 const {Markup, sprintf} = require('web.utils');
 const weUtils = require('web_editor.utils');
@@ -121,19 +121,42 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         await this._super(...arguments);
 
+        const fontsToLoad = [];
+        for (const font of this.googleFonts) {
+            const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}`;
+            fontsToLoad.push(fontURL);
+        }
+        for (const font of this.googleLocalFonts) {
+            const attachmentId = font.split(/\s*:\s*/)[1];
+            const fontURL = `/web/content/${attachmentId}`;
+            fontsToLoad.push(fontURL);
+        }
+        // TODO ideally, remove the <link> elements created once this widget
+        // instance is destroyed (although it should not hurt to keep them for
+        // the whole backend lifecycle).
+        const proms = fontsToLoad.map(async fontURL => loadCSS(fontURL));
+        const fontsLoadingProm = Promise.all(proms);
+
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
         _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
-            const fontName = fontKey === "'SYSTEM_FONTS'" ? _t("System Fonts") : fontKey.slice(1, -1);
+            let fontName = fontKey.slice(1, -1); // Unquote
+            let fontFamily = fontName;
+            if (fontName === "SYSTEM_FONTS") {
+                fontName = _t("System Fonts");
+                fontFamily = 'var(--o-system-fonts)';
+            }
             const fontEl = document.createElement('we-button');
+            // TODO: Remove me in master;
             fontEl.classList.add(`o_we_option_font_${realFontNb}`);
             fontEl.setAttribute('string', fontName);
             fontEl.dataset.variable = variable;
             fontEl.dataset[methodName] = fontKey;
             fontEl.dataset.font = realFontNb;
+            fontEl.dataset.fontFamily = fontFamily;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
         });
@@ -160,6 +183,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
             variable: variable,
         })));
+
+        return fontsLoadingProm;
     },
 
     //--------------------------------------------------------------------------
@@ -172,6 +197,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     async setValue() {
         await this._super(...arguments);
 
+        // TODO: Remove me in master
         for (const className of this.menuTogglerEl.classList) {
             if (className.match(/^o_we_option_font_\d+$/)) {
                 this.menuTogglerEl.classList.remove(className);
@@ -179,6 +205,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         if (activeWidget) {
+            this.menuTogglerEl.style.fontFamily = activeWidget.el.dataset.fontFamily;
+            // TODO: Remove me in master
             this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
         }
     },
@@ -284,7 +312,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
 
         // Adapt font variable indexes to the removal
-        const style = window.getComputedStyle(document.documentElement);
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
             const value = weUtils.getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === googleFontName) {
@@ -945,7 +973,16 @@ options.registry.BackgroundShape.include({
             return el;
         }
         return _getLastPreFilterLayerElement(this.$target);
-    }
+    },
+    /**
+     * @override
+     */
+    _removeShapeEl(shapeEl) {
+        this.trigger_up('widgets_stop_request', {
+            $target: $(shapeEl),
+        });
+        return this._super(...arguments);
+    },
 });
 
 options.registry.ReplaceMedia.include({
@@ -1474,7 +1511,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      */
     async start() {
         // Checks for support of the old color system
-        const style = window.getComputedStyle(document.documentElement);
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
         const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
         this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
@@ -2242,8 +2279,11 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
-        const shown = await this._isShown();
-        this.trigger_up('snippet_option_visibility_update', {show: shown});
+        // TODO in master: Use the data-invisible system to get rid of this
+        // piece of code.
+        this._isShown().then(isShown => {
+            this.trigger_up('snippet_option_visibility_update', {show: isShown});
+        });
     },
     /**
      * @override
@@ -3638,6 +3678,61 @@ options.registry.SwitchableViews = options.Class.extend({
     _checkIfWidgetsUpdateNeedReload() {
         return true;
     }
+});
+
+options.registry.GridImage = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    changeGridImageMode(previewMode, widgetValue, params) {
+        const imageGridItemEl = this._getImageGridItem();
+        if (imageGridItemEl) {
+            imageGridItemEl.classList.toggle('o_grid_item_image_contain', widgetValue === 'contain');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the parent column if it is marked as a grid item containing an
+     * image.
+     *
+     * @returns {?HTMLElement}
+     */
+    _getImageGridItem() {
+        const parentEl = this.$target[0].parentNode;
+        if (parentEl && parentEl.classList.contains('o_grid_item_image')) {
+            return parentEl;
+        }
+        return null;
+    },
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        return this._super(...arguments)
+            && !!this._getImageGridItem()
+            && !('shape' in this.$target[0].dataset);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'changeGridImageMode') {
+            const imageGridItemEl = this._getImageGridItem();
+            return imageGridItemEl && imageGridItemEl.classList.contains('o_grid_item_image_contain')
+                ? 'contain'
+                : 'cover';
+        }
+        return this._super(...arguments);
+    },
 });
 
 return {

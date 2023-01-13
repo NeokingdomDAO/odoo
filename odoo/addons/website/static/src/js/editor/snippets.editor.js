@@ -65,6 +65,24 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @todo adapt in master. This override will disable the link popover on
+     * "s_share" items in stable versions. It should be replaced simply by
+     * adding the "o_no_link_popover" class in XML.
+     *
+     * @override
+     */
+    async callPostSnippetDrop($target) {
+        if ($target[0].classList.contains('s_share')) {
+            $target[0].classList.add('o_no_link_popover');
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -79,6 +97,26 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
 
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: as a stable fix we decided to introduce a new
+        // option for image in grid mode to change the default "cover" display
+        // into "contain" should the user prefer it. Note: to be sure, this
+        // targets all images but is only displayed if the image acts as a grid
+        // image (parent column has the right class).
+        $html.find('[data-js="WebsiteAnimate"]').eq(0).before($(_.str.sprintf(`
+            <div data-js="GridImage" data-selector="img">
+                <we-select string="%s">
+                    <we-button data-change-grid-image-mode="cover">%s</we-button>
+                    <we-button data-change-grid-image-mode="contain">%s</we-button>
+                </we-select>
+            </div>
+        `, _t("Position"), _t("Cover"), _t("Contain"))));
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -468,7 +506,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 }
             }
         }
-    }
+    },
 });
 
 weSnippetEditor.SnippetEditor.include({

@@ -1164,7 +1164,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1729,8 +1729,12 @@ class _String(Field):
 
         for lang, to_lang_value in to_lang_values.items():
             to_lang_terms = self.get_trans_terms(to_lang_value)
-            for from_lang_term, to_lang_term in zip(from_lang_terms, to_lang_terms):
-                dictionary[from_lang_term].update({lang: to_lang_term})
+            if len(from_lang_terms) != len(to_lang_terms):
+                for from_lang_term in from_lang_terms:
+                    dictionary[from_lang_term][lang] = from_lang_term
+            else:
+                for from_lang_term, to_lang_term in zip(from_lang_terms, to_lang_terms):
+                    dictionary[from_lang_term][lang] = to_lang_term
         return dictionary
 
     def _get_stored_translations(self, record):
@@ -1794,14 +1798,17 @@ class _String(Field):
                 continue
             from_lang_value = old_translations.get(lang, old_translations.get('en_US'))
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
-            text2term = {self.get_text_content(term): term for term in new_terms}
+            text2terms = defaultdict(list)
+            for term in new_terms:
+                text2terms[self.get_text_content(term)].append(term)
 
             for old_term in list(translation_dictionary.keys()):
                 if old_term not in new_terms:
                     old_term_text = self.get_text_content(old_term)
-                    matches = get_close_matches(old_term_text, text2term, 1, 0.9)
+                    matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
-                        translation_dictionary[text2term[matches[0]]] = translation_dictionary.pop(old_term)
+                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                        translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)

@@ -21,134 +21,6 @@
 
     var owl__namespace = /*#__PURE__*/_interopNamespace(owl);
 
-    /**
-     * Registry
-     *
-     * The Registry class is basically just a mapping from a string key to an object.
-     * It is really not much more than an object. It is however useful for the
-     * following reasons:
-     *
-     * 1. it let us react and execute code when someone add something to the registry
-     *   (for example, the FunctionRegistry subclass this for this purpose)
-     * 2. it throws an error when the get operation fails
-     * 3. it provides a chained API to add items to the registry.
-     */
-    class Registry {
-        constructor() {
-            this.content = {};
-        }
-        /**
-         * Add an item to the registry
-         *
-         * Note that this also returns the registry, so another add method call can
-         * be chained
-         */
-        add(key, value) {
-            this.content[key] = value;
-            return this;
-        }
-        /**
-         * Get an item from the registry
-         */
-        get(key) {
-            /**
-             * Note: key in {} is ~12 times slower than {}[key].
-             * So, we check the absence of key only when the direct access returns
-             * a falsy value. It's done to ensure that the registry can contains falsy values
-             */
-            const content = this.content[key];
-            if (!content) {
-                if (!(key in this.content)) {
-                    throw new Error(`Cannot find ${key} in this registry!`);
-                }
-            }
-            return content;
-        }
-        /**
-         * Get a list of all elements in the registry
-         */
-        getAll() {
-            return Object.values(this.content);
-        }
-        /**
-         * Get a list of all keys in the registry
-         */
-        getKeys() {
-            return Object.keys(this.content);
-        }
-        /**
-         * Remove an item from the registry
-         */
-        remove(key) {
-            delete this.content[key];
-        }
-    }
-
-    /**
-     * This registry is intended to map a cell content (raw string) to
-     * an instance of a cell.
-     */
-    const chartRegistry = new Registry();
-    const chartComponentRegistry = new Registry();
-
-    class ChartJsComponent extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.canvas = owl.useRef("graphContainer");
-        }
-        get background() {
-            return this.chartRuntime.background;
-        }
-        get canvasStyle() {
-            return `background-color: ${this.background}`;
-        }
-        get chartRuntime() {
-            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
-            if (!("chartJsConfig" in runtime)) {
-                throw new Error("Unsupported chart runtime");
-            }
-            return runtime;
-        }
-        setup() {
-            owl.onMounted(() => {
-                const runtime = this.chartRuntime;
-                this.createChart(runtime.chartJsConfig);
-            });
-            owl.onPatched(() => {
-                var _a, _b, _c, _d;
-                const chartData = this.chartRuntime.chartJsConfig;
-                if (chartData.data && chartData.data.datasets) {
-                    this.chart.data = chartData.data;
-                    if ((_a = chartData.options) === null || _a === void 0 ? void 0 : _a.title) {
-                        this.chart.config.options.title = chartData.options.title;
-                    }
-                    if (chartData.options && "valueLabel" in chartData.options) {
-                        if ((_b = chartData.options) === null || _b === void 0 ? void 0 : _b.valueLabel) {
-                            this.chart.config.options.valueLabel =
-                                chartData.options.valueLabel;
-                        }
-                    }
-                }
-                else {
-                    this.chart.data.datasets = undefined;
-                }
-                this.chart.config.options.legend = (_c = chartData.options) === null || _c === void 0 ? void 0 : _c.legend;
-                this.chart.config.options.scales = (_d = chartData.options) === null || _d === void 0 ? void 0 : _d.scales;
-                this.chart.update({ duration: 0 });
-            });
-        }
-        createChart(chartData) {
-            const canvas = this.canvas.el;
-            const ctx = canvas.getContext("2d");
-            this.chart = new window.Chart(ctx, chartData);
-        }
-    }
-    ChartJsComponent.template = "o-spreadsheet-ChartJsComponent";
-    chartComponentRegistry.add("line", ChartJsComponent);
-    chartComponentRegistry.add("bar", ChartJsComponent);
-    chartComponentRegistry.add("pie", ChartJsComponent);
-    chartComponentRegistry.add("gauge", ChartJsComponent);
-
     /*
      * usage: every string should be translated either with _lt if they are registered with a registry at
      *  the load of the app or with Spreadsheet._t in the templates. Spreadsheet._t is exposed in the
@@ -362,6 +234,7 @@
     const PADDING_AUTORESIZE_VERTICAL = 3;
     const PADDING_AUTORESIZE_HORIZONTAL = MIN_CELL_TEXT_MARGIN;
     const FILTER_ICON_MARGIN = 2;
+    const FILTER_ICON_EDGE_LENGTH = 17;
     // Menus
     const MENU_WIDTH = 250;
     const MENU_ITEM_HEIGHT = 28;
@@ -394,6 +267,7 @@
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
     const LINE_FILL_TRANSPARENCY = 0.4;
+    const MIN_FIG_SIZE = 80;
     // session
     const DEBOUNCE_TIME = 200;
     const MESSAGE_VERSION = 1;
@@ -2845,6 +2719,149 @@
     }
 
     /**
+     * Registry
+     *
+     * The Registry class is basically just a mapping from a string key to an object.
+     * It is really not much more than an object. It is however useful for the
+     * following reasons:
+     *
+     * 1. it let us react and execute code when someone add something to the registry
+     *   (for example, the FunctionRegistry subclass this for this purpose)
+     * 2. it throws an error when the get operation fails
+     * 3. it provides a chained API to add items to the registry.
+     */
+    class Registry {
+        constructor() {
+            this.content = {};
+        }
+        /**
+         * Add an item to the registry
+         *
+         * Note that this also returns the registry, so another add method call can
+         * be chained
+         */
+        add(key, value) {
+            this.content[key] = value;
+            return this;
+        }
+        /**
+         * Get an item from the registry
+         */
+        get(key) {
+            /**
+             * Note: key in {} is ~12 times slower than {}[key].
+             * So, we check the absence of key only when the direct access returns
+             * a falsy value. It's done to ensure that the registry can contains falsy values
+             */
+            const content = this.content[key];
+            if (!content) {
+                if (!(key in this.content)) {
+                    throw new Error(`Cannot find ${key} in this registry!`);
+                }
+            }
+            return content;
+        }
+        /**
+         * Check if the key is already in the registry
+         */
+        contains(key) {
+            return key in this.content;
+        }
+        /**
+         * Get a list of all elements in the registry
+         */
+        getAll() {
+            return Object.values(this.content);
+        }
+        /**
+         * Get a list of all keys in the registry
+         */
+        getKeys() {
+            return Object.keys(this.content);
+        }
+        /**
+         * Remove an item from the registry
+         */
+        remove(key) {
+            delete this.content[key];
+        }
+    }
+
+    /**
+     * This registry is intended to map a cell content (raw string) to
+     * an instance of a cell.
+     */
+    const chartRegistry = new Registry();
+    const chartComponentRegistry = new Registry();
+
+    class ChartJsComponent extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.canvas = owl.useRef("graphContainer");
+        }
+        get background() {
+            return this.chartRuntime.background;
+        }
+        get canvasStyle() {
+            return `background-color: ${this.background}`;
+        }
+        get chartRuntime() {
+            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
+            if (!("chartJsConfig" in runtime)) {
+                throw new Error("Unsupported chart runtime");
+            }
+            return runtime;
+        }
+        setup() {
+            owl.onMounted(() => {
+                const runtime = this.chartRuntime;
+                this.createChart(runtime.chartJsConfig);
+            });
+            let previousRuntime = this.chartRuntime;
+            owl.onPatched(() => {
+                const chartRuntime = this.chartRuntime;
+                if (deepEquals(previousRuntime, chartRuntime)) {
+                    return;
+                }
+                this.updateChartJs(chartRuntime);
+                previousRuntime = chartRuntime;
+            });
+        }
+        createChart(chartData) {
+            const canvas = this.canvas.el;
+            const ctx = canvas.getContext("2d");
+            this.chart = new window.Chart(ctx, chartData);
+        }
+        updateChartJs(chartRuntime) {
+            var _a, _b, _c, _d;
+            const chartData = chartRuntime.chartJsConfig;
+            if (chartData.data && chartData.data.datasets) {
+                this.chart.data = chartData.data;
+                if ((_a = chartData.options) === null || _a === void 0 ? void 0 : _a.title) {
+                    this.chart.config.options.title = chartData.options.title;
+                }
+                if (chartData.options && "valueLabel" in chartData.options) {
+                    if ((_b = chartData.options) === null || _b === void 0 ? void 0 : _b.valueLabel) {
+                        this.chart.config.options.valueLabel =
+                            chartData.options.valueLabel;
+                    }
+                }
+            }
+            else {
+                this.chart.data.datasets = undefined;
+            }
+            this.chart.config.options.legend = (_c = chartData.options) === null || _c === void 0 ? void 0 : _c.legend;
+            this.chart.config.options.scales = (_d = chartData.options) === null || _d === void 0 ? void 0 : _d.scales;
+            this.chart.update({ duration: 0 });
+        }
+    }
+    ChartJsComponent.template = "o-spreadsheet-ChartJsComponent";
+    chartComponentRegistry.add("line", ChartJsComponent);
+    chartComponentRegistry.add("bar", ChartJsComponent);
+    chartComponentRegistry.add("pie", ChartJsComponent);
+    chartComponentRegistry.add("gauge", ChartJsComponent);
+
+    /**
      * An AutofillModifierImplementation is used to describe how to handle a
      * AutofillModifier.
      */
@@ -3029,7 +3046,6 @@
         "SET_FORMATTING",
         "CLEAR_FORMATTING",
         "SET_BORDER",
-        "SET_DECIMAL",
         /** CHART */
         "CREATE_CHART",
         "UPDATE_CHART",
@@ -4092,13 +4108,12 @@
   }
   .o-link-icon {
     float: right;
-    padding-left: 4%;
+    padding-left: 5px;
     .o-icon {
       height: 16px;
     }
   }
   .o-link-icon .o-icon {
-    padding-top: 3px;
     height: 13px;
   }
   .o-link-icon:hover {
@@ -4455,10 +4470,7 @@
         .add("HIDE_COLUMNS_ROWS", inverseHideColumnsRows)
         .add("UNHIDE_COLUMNS_ROWS", inverseUnhideColumnsRows);
     for (const cmd of coreTypes.values()) {
-        try {
-            inverseCommandRegistry.get(cmd);
-        }
-        catch (_) {
+        if (!inverseCommandRegistry.contains(cmd)) {
             inverseCommandRegistry.add(cmd, identity);
         }
     }
@@ -8185,7 +8197,7 @@
             baselineDisplay: getBaselineText(baselineCell, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
-            baselineDescr: _t(chart.baselineDescr || ""),
+            baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
             fontColor: chartFontColor(background),
             background,
             baselineStyle: chart.baselineMode !== "percentage" ? baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.style : undefined,
@@ -19027,7 +19039,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "STOP_EDITION":
                     if (cmd.cancel) {
-                        this.cancelEdition();
+                        this.cancelEditionAndActivateSheet();
                         this.resetContent();
                     }
                     else {
@@ -19043,7 +19055,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.replaceSelection(cmd.text);
                     break;
                 case "SELECT_FIGURE":
-                    this.cancelEdition();
+                    this.cancelEditionAndActivateSheet();
                     this.resetContent();
                     break;
                 case "ADD_COLUMNS_ROWS":
@@ -19088,6 +19100,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.selectionEnd = this.currentContent.length;
                     break;
                 case "ACTIVATE_SHEET":
+                    if (!this.currentContent.startsWith("=")) {
+                        this.cancelEdition();
+                        this.resetContent();
+                    }
                     if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
                         const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
                         const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
@@ -19100,7 +19116,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
                     if (!sheetIdExists && this.mode !== "inactive") {
                         this.sheetId = this.getters.getActiveSheetId();
-                        this.cancelEdition();
+                        this.cancelEditionAndActivateSheet();
                         this.resetContent();
                         this.ui.notifyUI({
                             type: "ERROR",
@@ -19260,13 +19276,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const zone = positionToZone({ col: this.col, row: this.row });
             this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
                 handleEvent: this.handleEvent.bind(this),
-                release: () => (this.mode = "inactive"),
+                release: () => {
+                    this.stopEdition();
+                },
             });
         }
         stopEdition() {
             if (this.mode !== "inactive") {
                 const activeSheetId = this.getters.getActiveSheetId();
-                this.cancelEdition();
+                this.cancelEditionAndActivateSheet();
                 const { col, row } = this.getters.getMainCellPosition(this.sheetId, this.col, this.row);
                 let content = this.currentContent;
                 const didChange = this.initialContent !== content;
@@ -19304,12 +19322,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.setContent("");
             }
         }
-        cancelEdition() {
+        cancelEditionAndActivateSheet() {
             if (this.mode === "inactive") {
                 return;
             }
-            this.mode = "inactive";
-            this.selection.release(this);
+            this.cancelEdition();
             const sheetId = this.getters.getActiveSheetId();
             if (sheetId !== this.sheetId) {
                 this.dispatch("ACTIVATE_SHEET", {
@@ -19317,6 +19334,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     sheetIdTo: this.sheetId,
                 });
             }
+        }
+        cancelEdition() {
+            if (this.mode === "inactive") {
+                return;
+            }
+            this.mode = "inactive";
+            this.selection.release(this);
         }
         /**
          * Reset the current content to the active cell content
@@ -20425,8 +20449,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     display: flex;
     align-items: center;
     justify-content: center;
-    width: ${ICON_EDGE_LENGTH}px;
-    height: ${ICON_EDGE_LENGTH}px;
+    width: ${FILTER_ICON_EDGE_LENGTH}px;
+    height: ${FILTER_ICON_EDGE_LENGTH}px;
 
     svg {
       path {
@@ -20465,10 +20489,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const rowDims = this.env.model.getters.getRowDimensionsInViewport(sheetId, position.row);
             const colDims = this.env.model.getters.getColDimensionsInViewport(sheetId, position.col);
             // TODO : change this offset when we support vertical cell align
-            const centeringOffset = (rowDims.size - ICON_EDGE_LENGTH) / 2;
+            const centeringOffset = Math.floor((rowDims.size - FILTER_ICON_EDGE_LENGTH) / 2);
             return {
-                x: colDims.end - ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN,
-                y: rowDims.end - ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
+                x: colDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN - 1,
+                y: rowDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
             };
         }
         isFilterActive(position) {
@@ -20513,7 +20537,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const ANCHOR_SIZE = 8;
     const BORDER_WIDTH = 1;
     const ACTIVE_BORDER_WIDTH = 2;
-    const MIN_FIG_SIZE = 80;
     css /*SCSS*/ `
   div.o-figure {
     box-sizing: content-box;
@@ -20712,7 +20735,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             owl.useEffect((selectedFigureId, thisFigureId, el) => {
                 if (selectedFigureId === thisFigureId) {
-                    el === null || el === void 0 ? void 0 : el.focus();
+                    /** Scrolling on a newly inserted figure that overflows outside the viewport
+                     * will break the whole layout.
+                     * NOTE: `preventScroll`does not work on mobile but then again,
+                     * mobile is not really supported ATM.
+                     *
+                     * TODO: When implementing proper mobile, we will need to scroll the viewport
+                     * correctly (and render?) before focusing the element.
+                     */
+                    el === null || el === void 0 ? void 0 : el.focus({ preventScroll: true });
                 }
             }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
         }
@@ -20721,16 +20752,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             const initialX = ev.clientX;
             const initialY = ev.clientY;
-            this.dnd.isActive = true;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
-                const deltaX = dirX * (ev.clientX - initialX);
-                const deltaY = dirY * (ev.clientY - initialY);
-                this.dnd.width = Math.max(figure.width + deltaX, MIN_FIG_SIZE);
-                this.dnd.height = Math.max(figure.height + deltaY, MIN_FIG_SIZE);
+                this.dnd.isActive = true;
+                const deltaX = Math.max(dirX * (ev.clientX - initialX), MIN_FIG_SIZE - figure.width);
+                const deltaY = Math.max(dirY * (ev.clientY - initialY), MIN_FIG_SIZE - figure.height);
+                this.dnd.width = figure.width + deltaX;
+                this.dnd.height = figure.height + deltaY;
                 if (dirX < 0) {
                     this.dnd.x = figure.x - deltaX;
                 }
@@ -20776,12 +20807,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
             const initialX = ev.clientX - position.left;
             const initialY = ev.clientY - position.top;
-            this.dnd.isActive = true;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
+                this.dnd.isActive = true;
                 const newX = ev.clientX - position.left;
                 let deltaX = newX - initialX;
                 if (newX > offsetCorrectionX && initialX < offsetCorrectionX) {
@@ -21180,6 +21211,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.state.waitingForMove === true) {
                 this.startMovement(ev);
                 return;
+            }
+            if (this.env.model.getters.getEditionMode() === "editing") {
+                this.env.model.selection.getBackToDefault();
             }
             this.startSelection(ev, index);
         }
@@ -21962,7 +21996,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 left: `${this.props.position.left + x}px`,
                 bottom: "0px",
-                right: `${SCROLLBAR_WIDTH$1}px`,
+                height: `${SCROLLBAR_WIDTH$1}px`,
+                right: `0px`,
             };
         }
         onScroll(offset) {
@@ -22003,7 +22038,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 top: `${this.props.position.top + y}px`,
                 right: "0px",
-                bottom: `${SCROLLBAR_WIDTH$1}px`,
+                width: `${SCROLLBAR_WIDTH$1}px`,
+                bottom: `0px`,
             };
         }
         onScroll(offset) {
@@ -22193,7 +22229,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.focus();
         }
         focus() {
-            if (!this.env.model.getters.getSelectedFigureId()) {
+            if (!this.env.model.getters.getSelectedFigureId() &&
+                this.env.model.getters.getEditionMode() === "inactive") {
                 this.hiddenInput.el.focus();
             }
         }
@@ -22356,13 +22393,27 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Context Menu
         // ---------------------------------------------------------------------------
+        onInputContextMenu(ev) {
+            ev.preventDefault();
+            const lastZone = this.env.model.getters.getSelectedZone();
+            const { left: col, top: row } = lastZone;
+            let type = "CELL";
+            this.env.model.dispatch("STOP_EDITION");
+            if (this.env.model.getters.getActiveCols().has(col)) {
+                type = "COL";
+            }
+            else if (this.env.model.getters.getActiveRows().has(row)) {
+                type = "ROW";
+            }
+            const { x, y, width, height } = this.env.model.getters.getVisibleRect(lastZone);
+            this.toggleContextMenu(type, x + width, y + height);
+        }
         onCellRightClicked(col, row, { x, y }) {
             const zones = this.env.model.getters.getSelectedZones();
             const lastZone = zones[zones.length - 1];
             let type = "CELL";
             if (!isInside(col, row, lastZone)) {
-                this.env.model.dispatch("UNFOCUS_SELECTION_INPUT");
-                this.env.model.dispatch("STOP_EDITION");
+                this.env.model.selection.getBackToDefault();
                 this.env.model.selection.selectCell(col, row);
             }
             else {
@@ -26343,7 +26394,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     function repairInitialMessages(data, initialMessages) {
         initialMessages = fixTranslatedSheetIds(data, initialMessages);
-        initialMessages = dropSortCommands(data, initialMessages);
+        initialMessages = dropCommands(initialMessages, "SORT_CELLS");
+        initialMessages = dropCommands(initialMessages, "SET_DECIMAL");
         return initialMessages;
     }
     /**
@@ -26381,14 +26433,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return messages;
     }
-    function dropSortCommands(data, initialMessages) {
+    function dropCommands(initialMessages, commandType) {
         const messages = [];
         for (const message of initialMessages) {
             if (message.type === "REMOTE_REVISION") {
                 messages.push({
                     ...message,
-                    // @ts-ignore
-                    commands: message.commands.filter((command) => command.type !== "SORT_CELLS"),
+                    commands: message.commands.filter((command) => command.type !== commandType),
                 });
             }
             else {
@@ -32464,19 +32515,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let filterBorder = undefined;
             for (let filters of this.getters.getFilterTables(sheetId)) {
                 const zone = filters.zone;
-                // The borders should be at the edges of the visible zone of the filter
-                const colsRange = range(zone.left, zone.right + 1);
-                const rowsRange = range(zone.top, zone.bottom + 1);
-                const visibleLeft = this.getters.findVisibleHeader(sheetId, "COL", colsRange);
-                const visibleRight = this.getters.findVisibleHeader(sheetId, "COL", colsRange.reverse());
-                const visibleTop = this.getters.findVisibleHeader(sheetId, "ROW", rowsRange);
-                const visibleBottom = this.getters.findVisibleHeader(sheetId, "ROW", rowsRange.reverse());
                 if (isInside(col, row, zone)) {
+                    // The borders should be at the edges of the visible zone of the filter
+                    const visibleZone = this.intersectZoneWithViewport(sheetId, zone);
                     filterBorder = {
-                        top: row === visibleTop ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        bottom: row === visibleBottom ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        left: col === visibleLeft ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        right: col === visibleRight ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        top: row === visibleZone.top ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        bottom: row === visibleZone.bottom ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        left: col === visibleZone.left ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        right: col === visibleZone.right ? DEFAULT_FILTER_BORDER_DESC : undefined,
                     };
                 }
             }
@@ -32516,6 +32562,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a, _b;
             const id = this.getters.getFilterId(sheetId, col, row);
             return Boolean(id && ((_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[id]) === null || _b === void 0 ? void 0 : _b.length));
+        }
+        intersectZoneWithViewport(sheetId, zone) {
+            const colsRange = range(zone.left, zone.right + 1);
+            const rowsRange = range(zone.top, zone.bottom + 1);
+            return {
+                left: this.getters.findVisibleHeader(sheetId, "COL", colsRange),
+                right: this.getters.findVisibleHeader(sheetId, "COL", colsRange.reverse()),
+                top: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange),
+                bottom: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange.reverse()),
+            };
         }
         updateFilter({ col, row, values, sheetId }) {
             const id = this.getters.getFilterId(sheetId, col, row);
@@ -33515,7 +33571,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             /** Filter Header */
             box.isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
-            const headerIconWidth = box.isFilterHeader ? ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
+            const headerIconWidth = box.isFilterHeader ? FILTER_ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
             const text = this.getters.getCellText(cell, showFormula);
             const textWidth = this.getters.getTextWidth(cell);
@@ -34724,6 +34780,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.clientId = "local";
             this.pendingMessages = [];
             this.waitingAck = false;
+            this.isReplayingInitialRevisions = false;
             this.processedRevisions = new Set();
             this.uuidGenerator = new UuidGenerator();
             this.debouncedMove = debounce(this._move.bind(this), DEBOUNCE_TIME);
@@ -34783,6 +34840,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.transportService.onNewMessage(this.clientId, this.onMessageReceived.bind(this));
         }
         loadInitialMessages(messages) {
+            this.isReplayingInitialRevisions = true;
             this.on("unexpected-revision-id", this, ({ revisionId }) => {
                 throw new Error(`The spreadsheet could not be loaded. Revision ${revisionId} is corrupted.`);
             });
@@ -34790,6 +34848,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.onMessageReceived(message);
             }
             this.off("unexpected-revision-id", this);
+            this.isReplayingInitialRevisions = false;
         }
         /**
          * Notify the server that the user client left the collaborative session
@@ -34977,6 +35036,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     clientId: revision.clientId,
                     commands: revision.commands,
                 };
+            }
+            if (this.isReplayingInitialRevisions) {
+                throw new Error(`Trying to send a new revision while replaying initial revision. This can lead to endless dispatches every time the spreadsheet is open.
+      ${JSON.stringify(message)}`);
             }
             this.transportService.sendMessage({
                 ...message,
@@ -36904,14 +36967,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 offsetX: offsetScrollbarX + deltaX,
                 offsetY: offsetScrollbarY + deltaY,
             });
-        }
-        copy(ev) {
-            this.env.model.dispatch("COPY");
-            const content = this.env.model.getters.getClipboardContent();
-            // TODO use env.clipboard
-            // TODO add a test
-            ev.clipboardData.setData("text/plain", content);
-            ev.preventDefault();
         }
     }
     SpreadsheetDashboard.template = "o-spreadsheet-SpreadsheetDashboard";
@@ -39347,7 +39402,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let sheetName = "";
             let prefixSheet = false;
             if (sheetXC.includes("!")) {
-                [sheetName, sheetXC] = sheetXC.split("!");
+                [sheetXC, sheetName] = sheetXC.split("!").reverse();
                 if (sheetName) {
                     prefixSheet = true;
                 }
@@ -39554,6 +39609,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.mainSubscription = this.defaultSubscription;
         }
         /**
+         * Release whichever subscription in charge and get back to the default subscription
+         */
+        getBackToDefault() {
+            var _a, _b, _c;
+            if (this.mainSubscription === this.defaultSubscription) {
+                return;
+            }
+            (_c = (_a = this.mainSubscription) === null || _a === void 0 ? void 0 : (_b = _a.callbacks).release) === null || _c === void 0 ? void 0 : _c.call(_b);
+            this.mainSubscription = this.defaultSubscription;
+        }
+        /**
          * Check if you are currently the main stream consumer
          */
         isListening(owner) {
@@ -39615,6 +39681,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.stream.release(owner);
                 this.anchor = this.defaultAnchor;
             }
+        }
+        getBackToDefault() {
+            this.stream.getBackToDefault();
         }
         /**
          * Select a new anchor
@@ -41667,7 +41736,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case 3 /* Status.Finalizing */:
                         throw new Error("Cannot dispatch commands in the finalize state");
                     case 2 /* Status.RunningCore */:
-                        throw new Error("A UI plugin cannot dispatch while handling a core command");
+                        if (isCoreCommand(command)) {
+                            throw new Error(`A UI plugin cannot dispatch ${type} while handling a core command`);
+                        }
+                        this.dispatchToHandlers(this.handlers, command);
                 }
                 return DispatchResult.Success;
             };
@@ -41789,7 +41861,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onRemoteRevisionReceived({ commands }) {
             for (let command of commands) {
+                const previousStatus = this.status;
+                this.status = 2 /* Status.RunningCore */;
                 this.dispatchToHandlers(this.uiPlugins, command);
+                this.status = previousStatus;
             }
             this.finalize();
         }
@@ -41991,6 +42066,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         parseMarkdownLink,
         markdownLink,
         createEmptyWorkbookData,
+        createEmptySheet,
+        createEmptyExcelSheet,
         getDefaultChartJsRuntime,
         chartFontColor,
         getMenuChildren,
@@ -42055,8 +42132,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-25T14:49:18.608Z';
-    exports.__info__.hash = 'f83585f';
+    exports.__info__.date = '2023-01-04T17:30:44.594Z';
+    exports.__info__.hash = 'bcf70ba';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

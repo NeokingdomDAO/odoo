@@ -378,7 +378,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return [];
     }
     _getUnremovableElements () {
-        return this.$editable[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
+        // TODO adapt in master: this was added as a fix to target some elements
+        // to be unremovable. This fix had to be reverted but to keep things
+        // stable, this still had to return the same thing: a NodeList. This
+        // code here seems the only (?) way to create a static empty NodeList.
+        // In master, this should return an array as it seems intended by the
+        // library caller anyway.
+        return document.querySelectorAll('.a:not(.a)');
     }
     /**
      * This method provides support for the legacy event system.
@@ -524,6 +530,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 100,
                 description: this.env._t('Insert an alert snippet.'),
                 fontawesome: 'fa-info',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
                 },
@@ -534,6 +541,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 90,
                 description: this.env._t('Insert a rating snippet.'),
                 fontawesome: 'fa-star-half-o',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
                 },
@@ -544,6 +552,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 80,
                 description: this.env._t('Insert a card snippet.'),
                 fontawesome: 'fa-sticky-note',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
                 },
@@ -554,6 +563,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 70,
                 description: this.env._t('Insert a share snippet.'),
                 fontawesome: 'fa-share-square-o',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
                 },
@@ -564,6 +574,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 60,
                 description: this.env._t('Insert a text Highlight snippet.'),
                 fontawesome: 'fa-sticky-note',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
                 },
@@ -574,6 +585,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 50,
                 description: this.env._t('Insert a chart snippet.'),
                 fontawesome: 'fa-bar-chart',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
                 },
@@ -584,6 +596,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 40,
                 description: this.env._t('Insert a progress bar snippet.'),
                 fontawesome: 'fa-spinner',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
                 },
@@ -594,6 +607,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 30,
                 description: this.env._t('Insert a badge snippet.'),
                 fontawesome: 'fa-tags',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
                 },
@@ -604,6 +618,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 20,
                 description: this.env._t('Insert a blockquote snippet.'),
                 fontawesome: 'fa-quote-left',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
                 },
@@ -614,6 +629,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 priority: 10,
                 description: this.env._t('Insert an horizontal separator sippet.'),
                 fontawesome: 'fa-minus',
+                isDisabled: () => !this.widget.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
                 },
