@@ -42,10 +42,10 @@
 
 -->
 
-<!--templates xml:space="preserve">
+<templates xml:space="preserve">
 
 	<t t-name="muk_web_theme.AppsBar" owl="1">
-		<div class="mk_apps_sidebar_panel">
+		<div class="mk_apps_sidebar_panel" style="display: None">
 			<div class="mk_apps_sidebar">
 				<ul class="mk_apps_sidebar_menu">
 				    <t t-foreach="props.apps" t-as="app" t-key="app.id">
@@ -80,4 +80,4 @@
 		</div>
 	</t>
 	
-</templates-->
+</templates>
