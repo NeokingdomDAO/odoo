@@ -13,7 +13,6 @@ env/
 bin/
 build/
 develop-eggs/
-dist/
 dist_wo_pbr/
 eggs/
 lib64/
