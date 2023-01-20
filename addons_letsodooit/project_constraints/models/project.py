@@ -7,7 +7,7 @@ class Task(models.Model):
     @api.constrains('stage_id')
     def check_is_final_stage(self):
         for task in self:
-            if task.stage_id.is_final():
+            if task.stage_id.is_final() and not self.env.context.get('force_final_stage', False):
                 raise UserError(_('You cannot change/delete a task which is in a final stage!'))
 
     @api.constrains('parent_id', 'date_deadline')
