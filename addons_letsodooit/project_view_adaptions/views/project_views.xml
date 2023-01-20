@@ -87,8 +87,8 @@
     <menuitem action="project.open_view_project_all_config" id="project.menu_projects" name="Projects" parent="project.menu_main_pm" sequence="1"/>
 
     <menuitem name="Todos" id="project.menu_project_management" parent="project.menu_main_pm"
-        action="action_view_all_task" sequence="2" groups="base.group_no_one"/>
+        action="action_view_all_task" sequence="2" groups="base.group_project_user"/>
 
     <menuitem name="Approvals" id="menu_project_management_approvals" parent="project.menu_main_pm"
-        action="action_view_all_approval_task" sequence="3" groups="base.group_no_one"/>
+        action="action_view_all_approval_task" sequence="3" groups="base.group_project_user"/>
 </odoo>

@@ -33,7 +33,7 @@ class Task(models.Model):
             final_stage = self.env['project.task.type'].get_final_stage_for_task(task)
             task.with_context(force_final_stage=True).write({
                 'stage_id': final_stage.id,
-                'approval_date': fields.Date.now()
+                'approval_date': fields.Date.today()
             })
 
     def write(self, values):
