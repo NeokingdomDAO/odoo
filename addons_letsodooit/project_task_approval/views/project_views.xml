@@ -8,6 +8,9 @@
             <filter name="my_tasks" position="after">
                 <filter string="My Approvals" name="my_approvals" domain="[('approval_user_id', '=', uid), ('is_approval_stage', '=', True)]"/>
             </filter>
+            <filter name="open_tasks" position="attributes">
+                <attribute name="domain">[('is_closed', '=', False), ('is_approval_stage', '=', False)]</attribute>
+            </filter>
         </field>
     </record>
 
