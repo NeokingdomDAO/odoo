@@ -4,11 +4,13 @@ from odoo.exceptions import UserError
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
-    @api.constrains('user_id')
-    def check_no_time_tracked(self):
+    @api.constrains('user_ids')
+    def ensure_employee_part_of_assignees(self):
         for task in self:
-            if self.env['account.analytic.line'].search_count([('task_id', '=', task.id)]):
-                raise UserError(_("You cannot reassign a task after time has been tracked!"))
+            timesheet_ids = self.env['account.analytic.line'].search([('task_id', '=', task.id)])
+            for employee_id in timesheet_ids.mapped('employee_id'):
+                if not employee_id.user_id or employee_id.user_id not in task.user_ids:
+                    raise UserError(_("There is a mismatch between the person who tracked time and the assignees for this task. Please fix it first!"))
 
     @api.constrains('stage_id')
     def check_pre_final_stage(self):

@@ -14,7 +14,7 @@ class Task(models.Model):
     def check_date_deadline_lower_than_parent(self):
         for task in self:
             if task.parent_id and task.date_deadline > task.parent_id.date_deadline:
-                raise UserError(_('Please ensure that the deadline of the task is not greate than the deadline of the parent task!'))
+                raise UserError(_('Please ensure that the deadline of the task is not greater than the deadline of the parent task!'))
 
     @api.constrains('stage_id.sequence')
     def ensure_special_stages_ordered(self):
