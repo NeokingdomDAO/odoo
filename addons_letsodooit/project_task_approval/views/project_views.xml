@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.view_task_search_form_extended"></field>
         <field name="arch" type="xml">
             <filter name="my_tasks" position="after">
-                <filter string="My Approvals" name="my_approvals" domain="[('approval_user_id', '=', uid)]"/>
+                <filter string="My Approvals" name="my_approvals" domain="[('approval_user_id', '=', uid), ('is_approval_stage', '=', True)]"/>
             </filter>
         </field>
     </record>

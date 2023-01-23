@@ -71,7 +71,7 @@
         <field name="name">Approvals</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_my_approvals': 1, 'search_default_open_tasks': 1, 'all_task': 0, 'default_user_ids': [(4, uid)]}</field>
+        <field name="context">{'search_default_my_approvals': 1, 'all_task': 0, 'default_user_ids': [(4, uid)]}</field>
         <field name="search_view_id" ref="project_task_approval.view_task_search_form_extended"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
