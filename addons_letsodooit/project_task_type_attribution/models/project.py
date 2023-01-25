@@ -28,24 +28,40 @@ class ProjectTaskType(models.Model):
         return self.is_type('final')
 
     @api.model
-    def get_stage_for_task_by_stage_type(self, task, stage_type):
+    def get_stage_for_project_by_stage_type(self, project, stage_type):
         return self.search([
             ('stage_type', '=', stage_type),
-            ('project_ids', '=', task.project_id.id)
+            ('project_ids', '=', project.id)
         ], limit=1)
 
     @api.model
+    def get_initial_stage_for_project(self, project):
+        return self.get_stage_for_project_by_stage_type(project, 'initial')
+
+    @api.model
+    def get_post_initial_stage_for_project(self, project):
+        return self.get_stage_for_project_by_stage_type(project, 'post_initial')
+
+    @api.model
+    def get_pre_final_stage_for_project(self, project):
+        return self.get_stage_for_project_by_stage_type(project, 'pre_final')
+
+    @api.model
+    def get_final_stage_for_project(self, project):
+        return self.get_stage_for_project_by_stage_type(project, 'final')
+
+    @api.model
     def get_initial_stage_for_task(self, task):
-        return self.get_stage_for_task_by_stage_type(task, 'initial')
+        return self.get_stage_for_project_by_stage_type(task.project_id)
 
     @api.model
     def get_post_initial_stage_for_task(self, task):
-        return self.get_stage_for_task_by_stage_type(task, 'post_initial')
+        return self.get_stage_for_project_by_stage_type(task.project_id)
 
     @api.model
     def get_pre_final_stage_for_task(self, task):
-        return self.get_stage_for_task_by_stage_type(task, 'pre_final')
+        return self.get_stage_for_project_by_stage_type(task.project_id)
 
     @api.model
     def get_final_stage_for_task(self, task):
-        return self.get_stage_for_task_by_stage_type(task, 'final')
+        return self.get_stage_for_project_by_stage_type(task.project_id)
