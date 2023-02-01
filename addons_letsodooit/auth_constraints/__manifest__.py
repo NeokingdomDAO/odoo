@@ -1,0 +1,15 @@
+{
+    'name': 'Auth Constraints',
+    'author': 'Peter Schwarz (info@peter-schwarz.it)',
+    'version': '16.0.1.0.1',
+    'category': 'Hidden/Tools',
+    'sequence': 1,
+    'description': """This module adds constraints to the authentication process.""",
+    'license': 'OPL-1',
+    'depends': ['base_user_ethereum_address', 'auth_disable_password_login'],
+    'data': [],
+    'qweb': [],
+    'installable': True,
+    'auto_install': False,
+    'application': True,
+}
