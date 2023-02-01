@@ -52,16 +52,16 @@ class ProjectTaskType(models.Model):
 
     @api.model
     def get_initial_stage_for_task(self, task):
-        return self.get_stage_for_project_by_stage_type(task.project_id)
+        return self.get_initial_stage_for_project(task.project_id)
 
     @api.model
     def get_post_initial_stage_for_task(self, task):
-        return self.get_stage_for_project_by_stage_type(task.project_id)
+        return self.get_post_initial_stage_for_project(task.project_id)
 
     @api.model
     def get_pre_final_stage_for_task(self, task):
-        return self.get_stage_for_project_by_stage_type(task.project_id)
+        return self.get_pre_final_stage_for_project(task.project_id)
 
     @api.model
     def get_final_stage_for_task(self, task):
-        return self.get_stage_for_project_by_stage_type(task.project_id)
+        return self.get_final_stage_for_project(task.project_id)
