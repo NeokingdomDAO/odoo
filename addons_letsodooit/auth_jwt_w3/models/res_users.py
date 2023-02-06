@@ -17,7 +17,7 @@ class Users(models.Model):
             return super()._check_credentials(password, env)
         except AccessDenied:
             passwd_allowed = env['interactive'] or not self.env.user._rpc_api_keys_only()
-            if passwd_allowed and self.env.user.active and env['auth.jwt.w3.validator'].is_signing_token_valid(password):
+            if passwd_allowed and self.env.user.active and self.env['auth.jwt.w3.validator'].is_signing_token_valid(password):
                 return
             raise AccessDenied
 
