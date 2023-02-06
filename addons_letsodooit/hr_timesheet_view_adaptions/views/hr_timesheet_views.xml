@@ -8,6 +8,7 @@
             <field name="date" position="after">
                 <field name="start"/>
                 <field name="end"/>
+                <field name="approval_date"/>
                 <field name="tier_id"/>
             </field>
             <field name="date" position="attributes">

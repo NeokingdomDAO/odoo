@@ -1,9 +1,14 @@
 from odoo import api, fields, models
 
+class ProjectTask(models.Model):
+    _inherit = 'project.task'
+
+    stage_id = fields.Many2one('project.task.type', required=True)
+
+
 class ProjectTaskType(models.Model):
     _inherit = 'project.task.type'
 
-    stage_id = fields.Many2one('project.task.type', required=True)
     stage_type = fields.Selection([
         ('initial', 'Initial'),
         ('post_initial', 'Post-Initial'),

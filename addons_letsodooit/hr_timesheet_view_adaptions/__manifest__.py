@@ -5,7 +5,12 @@
     'sequence': 1,
     'description': """This module adapts the hr timesheet modules' views accordingly.""",
     'license': 'OPL-1',
-    'depends': ['hr_timesheet', 'analytic_line_start_end', 'analytic_tier'],
+    'depends': [
+        'analytic_line_start_end',
+        'analytic_tier',
+        'hr_timesheet',
+        'project_task_approval'
+    ],
     'data': [
         'views/hr_timesheet_views.xml',
         'views/project_views.xml'

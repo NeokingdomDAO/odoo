@@ -1,5 +1,4 @@
 import base64
-import json
 import jwt
 from datetime import timedelta
 from web3.auto import w3
