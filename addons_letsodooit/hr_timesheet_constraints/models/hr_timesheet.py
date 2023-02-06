@@ -28,6 +28,11 @@ class AccountAnalyticLine(models.Model):
         for line in self.filtered(lambda line: line.start and line.end):
             line.check_not_overlapping()
 
+    @api.constrains('task_id')
+    def ensure_employee_part_of_assignees(self):
+        for line in self:
+            line.task_id.ensure_employee_part_of_assignees()
+
     def write(self, values):
         if any(stage_id.is_final() for stage_id in self.mapped('task_id.stage_id')):
             raise UserError(_("After a task is approved you are not allowed to change values of the timesheet!"))

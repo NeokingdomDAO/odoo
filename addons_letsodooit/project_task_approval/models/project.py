@@ -5,7 +5,7 @@ class Task(models.Model):
     _inherit = 'project.task'
 
     user_id = fields.Many2one('res.users', string='Assignee', required=True, tracking=True)
-    user_ids = fields.Many2many('res.users', compute='_compute_user_ids', store=True)
+    user_ids = fields.Many2many('res.users', compute='_compute_user_ids', inverse='_inverse_user_ids', store=True)
     is_approval_stage = fields.Boolean('Is Approval Stage', compute='_compute_is_approval_stage', store=True)
     approval_user_id = fields.Many2one('res.users', string='Controller', required=True, tracking=True)
     approval_date = fields.Date(string='Approval Date', readonly=True)
@@ -20,6 +20,10 @@ class Task(models.Model):
     def _compute_user_ids(self):
         for task in self:
             task.user_ids = task.user_id
+
+    def _inverse_user_ids(self):
+        for task in self:
+            task.user_id = task.user_ids[0] if task.user_ids else False
 
     @api.depends('stage_id')
     def _compute_is_approval_stage(self):

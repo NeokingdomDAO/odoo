@@ -9,6 +9,7 @@ class AccountAnalyticLine(models.Model):
     date = fields.Date(
         string='Date',
         compute='_compute_date',
+        inverse='_inverse_date',
         store=True
     )
     unit_amount = fields.Float(
@@ -28,6 +29,10 @@ class AccountAnalyticLine(models.Model):
     def _compute_date(self):
         for line in self:
             line.date = line.start.date() if line.start else False
+
+    def _inverse_date(self):
+        for line in self:
+            line.start = line.date
 
     @api.depends('start', 'end')
     def _compute_unit_amount(self):
