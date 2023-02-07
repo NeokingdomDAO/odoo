@@ -6,7 +6,7 @@ class AccountAnalyticLine(models.Model):
 
     start = fields.Datetime(string='Start', required=True)
     end = fields.Datetime(string='End')
-    date = fields.Date(
+    date = fields.Datetime(
         string='Date',
         compute='_compute_date',
         inverse='_inverse_date',
