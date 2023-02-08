@@ -1,7 +1,7 @@
 {
     'name': 'Base User Ethereum Address',
     'author': 'Peter Schwarz (info@peter-schwarz.it)',
-    'version': '16.0.1.0.1',
+    'version': '16.0.1.0.2',
     'category': 'Base',
     'sequence': 1,
     'description': """This module adds an ethereum address to users.""",
