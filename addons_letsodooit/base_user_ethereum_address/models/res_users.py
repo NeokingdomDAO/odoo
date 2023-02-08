@@ -16,3 +16,14 @@ class User(models.Model):
         ]
 
     ethereum_address = fields.Char('Ethereum Address')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            values['ethereum_address'] = values.get('ethereum_address', '').lower()
+        return super().create(vals_list)
+
+    def write(self, values):
+        if 'ethereum_address' in values:
+            values['ethereum_address'] = values['ethereum_address'].lower()
+        return super().write(values)
