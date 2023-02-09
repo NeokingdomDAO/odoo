@@ -33,7 +33,28 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.task_id.ensure_employee_part_of_assignees()
 
+    @api.model
+    def _sanitize_start_and_end(self, values):
+        def zero_seconds(date_string):
+            return fields.Datetime.from_string(date_string).replace(second=0, microsecond=0)
+        if 'start' in values:
+            values['start'] = zero_seconds(values['start'])
+        if 'end' in values:
+            values['end'] = zero_seconds(values['end'])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            self._sanitize_start_and_end(values)
+        return super().create(vals_list)
+
     def write(self, values):
         if any(stage_id.is_final() for stage_id in self.mapped('task_id.stage_id')):
             raise UserError(_("After a task is approved you are not allowed to change values of the timesheet!"))
+        self._sanitize_start_and_end(values)
         return super().write(values)
+
+    def unlink(self):
+        if any(stage_id.is_final() for stage_id in self.mapped('task_id.stage_id')):
+            raise UserError(_("After a task is approved you are not allowed to delete a timesheet!"))
+        return super().unlink()
