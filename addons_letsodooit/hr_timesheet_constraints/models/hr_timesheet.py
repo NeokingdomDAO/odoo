@@ -1,5 +1,6 @@
 from dateutil.relativedelta import relativedelta
 from odoo import models, api, fields, _
+from odoo.osv import expression
 from odoo.exceptions import UserError
 
 class AccountAnalyticLine(models.Model):
@@ -8,25 +9,66 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one(required=True)
     task_id = fields.Many2one(required=True)
 
-    def search_overlapping_ids(self, date_criteria):
+    def search_extended(self, search_criteria):
         self.ensure_one()
-        day_after_start = self.date + relativedelta(days=1)
-        search_criteria = [('id', '!=', self.id), ('employee_id', '=', self.employee_id.id)]
-        search_criteria.extend(date_criteria)
+        search_criteria_extension = [('id', '!=', self.id), ('employee_id', '=', self.employee_id.id)]
+        search_criteria = expression.AND([search_criteria, search_criteria_extension])
         return self.search(search_criteria)
 
-    def check_not_overlapping(self):
-        self.ensure_one()
-        overlapping_ids_at_start = self.search_overlapping_ids([('start', '<=', self.start), ('end', '>', self.start)])
-        overlapping_ids_at_end = self.search_overlapping_ids([('start', '<', self.end), ('end', '>=', self.end)])
-        overlapping_ids = overlapping_ids_at_start + overlapping_ids_at_end
-        if overlapping_ids.exists():
-            raise UserError(_("Ensure that no timesheets are overlapping!"))
+    def _add_first_case_to_error_message(self, error_message, overlapping_line_ids):
+        overlapping_line_id = overlapping_line_ids[0]
+        description = overlapping_line_id.name
+        task_name = overlapping_line_id.task_id.name
+        return error_message + _("\n\nCollision with timesheet '{}' on task '{}'.".format(description, task_name))
 
-    @api.constrains('start', 'end', 'amount')
+    def check_start_not_overlapping(self):
+        self.ensure_one()
+        overlapping_line_ids = self.search_extended([
+            ('start', '<=', self.start),
+            ('end', '>', self.start)
+        ])
+        if overlapping_line_ids:
+            error_message = _('The start of your timesheet is overlapping!')
+            raise UserError(self._add_first_case_to_error_message(error_message, overlapping_line_ids))
+
+    def check_end_not_overlapping(self):
+        self.ensure_one()
+        overlapping_line_ids = self.search_extended([
+            ('start', '<', self.end),
+            ('end', '>=', self.end)
+        ])
+        if overlapping_line_ids:
+            error_message = _('The end of your timesheet is overlapping!')
+            raise UserError(self._add_first_case_to_error_message(error_message, overlapping_line_ids))
+
+    def check_not_surrounding(self):
+        self.ensure_one()
+        overlapping_line_ids = self.search_extended([
+            ('start', '>=', self.start),
+            ('end', '<=', self.end)
+        ])
+        if overlapping_line_ids:
+            error_message = _('Your timesheet is surrounding another one!')
+            raise UserError(self._add_first_case_to_error_message(error_message, overlapping_line_ids))
+
+    def check_only_open_line(self):
+        self.ensure_one()
+        overlapping_line_ids = self.search_extended([
+            ('end', '=', False)
+        ])
+        if overlapping_line_ids:
+            error_message = _('Only one timesheet is allowed to be open ended!')
+            raise UserError(self._add_first_case_to_error_message(error_message, overlapping_line_ids))
+
+    @api.constrains('start', 'end')
     def ensure_not_overlapping(self):
-        for line in self.filtered(lambda line: line.start and line.end):
-            line.check_not_overlapping()
+        for line in self:
+            line.check_start_not_overlapping()
+            if line.end:
+                line.check_end_not_overlapping()
+                line.check_not_surrounding()
+            else:
+                line.check_only_open_line()
 
     @api.constrains('task_id')
     def ensure_employee_part_of_assignees(self):
