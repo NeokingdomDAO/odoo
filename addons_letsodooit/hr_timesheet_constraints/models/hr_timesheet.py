@@ -37,9 +37,9 @@ class AccountAnalyticLine(models.Model):
     def _sanitize_start_and_end(self, values):
         def zero_seconds(date_string):
             return fields.Datetime.from_string(date_string).replace(second=0, microsecond=0)
-        if 'start' in values:
+        if values.get('start', False):
             values['start'] = zero_seconds(values['start'])
-        if 'end' in values:
+        if values.get('end', False):
             values['end'] = zero_seconds(values['end'])
 
     @api.model_create_multi
