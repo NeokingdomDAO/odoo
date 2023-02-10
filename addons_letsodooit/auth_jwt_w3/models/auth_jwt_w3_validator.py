@@ -42,7 +42,7 @@ class AuthJWTW3Validator(models.AbstractModel):
             payload = jwt.decode(authentication['signing_token'], server_secret, algorithms=["HS256"])
             message = encode_defunct(text=payload["message"])
             signer = w3.eth.account.recover_message(message, signature=authentication['signature'])
-            return self.env.user.ethereum_address == signer.lower()
+            return self.env.user.ethereum_address.lower() == signer.lower()
         except Exception as e:
             _logger.error(str(e))
             _logger.error('Wallet Authentication failed!')
