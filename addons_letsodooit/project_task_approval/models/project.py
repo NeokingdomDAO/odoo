@@ -54,5 +54,5 @@ class Task(models.Model):
                 }
                 record.activity_schedule(**activity_values)
             else:
-                record.activity_unlink('project_task_approval.mail_activity_data_approval')
+                record.activity_unlink(['project_task_approval.mail_activity_data_approval'])
         return result
