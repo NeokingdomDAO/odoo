@@ -4,7 +4,7 @@
     'author': 'Peter Schwarz (info@peter-schwarz.it)',
     'sequence': 1,
     'description': """This module provides the functionality to auto delete analytic lines when a task is archived.""",
-    'license': 'OPL-1',
+    'license': 'AGPL-3',
     'depends': ['hr_timesheet'],
     'data': [],
     'installable': True,

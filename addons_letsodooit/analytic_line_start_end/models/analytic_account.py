@@ -35,3 +35,19 @@ class AccountAnalyticLine(models.Model):
             line.unit_amount = 0.0
             if line.start and line.end:
                 line.unit_amount = (line.end - line.start).total_seconds() / 3600.0
+
+    @api.model
+    def _sanitize_date_values(self, values):
+        if 'date' in values and not 'start' in values:
+            values['start'] = values['date']
+            del values['date']
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            self._sanitize_date_values(values)
+        return super().create(vals_list)
+
+    def write(self, values):
+        self._sanitize_date_values(values)
+        return super().write(values)

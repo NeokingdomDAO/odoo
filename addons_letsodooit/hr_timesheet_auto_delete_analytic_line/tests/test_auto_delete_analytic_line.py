@@ -44,7 +44,6 @@ class TestAutoDeleteAnalyticLine(common.TransactionCase):
             'date': '2022-01-01'
         })
         self.task_id.write({'active': False})
-        self.env.invalidate_all()
         self.assertFalse(record.exists())
 
     def test_auto_deletion_archive(self):

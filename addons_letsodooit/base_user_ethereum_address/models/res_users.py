@@ -24,6 +24,6 @@ class User(models.Model):
         return super().create(vals_list)
 
     def write(self, values):
-        if 'ethereum_address' in values:
+        if values.get('ethereum_address', False):
             values['ethereum_address'] = values['ethereum_address'].lower()
         return super().write(values)
