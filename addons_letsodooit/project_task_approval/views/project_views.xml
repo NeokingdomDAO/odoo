@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <button name="action_assign_to_me" position="before">
                 <field name="is_approval_stage" invisible="1"/>
-                <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': &quot;['|', ('is_approval_stage', '=', False), ('approval_user_id', '!=', uid)]&quot;}"/>
+                <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_approval_stage', '=', False), ('approval_user_id', '!=', uid)]}"/>
             </button>
             <field name="user_ids" position="attributes">
                 <attribute name="invisible">1</attribute>
