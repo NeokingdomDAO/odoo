@@ -7,7 +7,7 @@
     'license': 'OPL-1',
     'depends': [
         'document_page',
-        'spreadsheet'
+        'spreadsheet_oca'
     ],
     'data': [
         'views/document_page_views.xml'
