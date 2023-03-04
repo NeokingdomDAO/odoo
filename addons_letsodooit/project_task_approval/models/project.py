@@ -46,13 +46,14 @@ class Task(models.Model):
             if record.stage_id.is_final() and not self.env.context.get('force_final_stage', False):
                 raise UserError(_('Please use the approve button to set a task to approved!'))
             if record.is_approval_stage:
-                activity_values = {
-                    'act_type_xmlid': 'project_task_approval.mail_activity_data_approval',
-                    'summary': _('Please approve the task!'),
-                    'note': _('A task you have been assigned for as controller has reached the approval stage!'),
-                    'user_id': record.approval_user_id.id
-                }
-                record.activity_schedule(**activity_values)
+                if not record.activity_search(act_type_xmlids=['project_task_approval.mail_activity_data_approval']):
+                    activity_values = {
+                        'act_type_xmlid': 'project_task_approval.mail_activity_data_approval',
+                        'summary': _('Please approve the task!'),
+                        'note': _('A task you have been assigned for as controller has reached the approval stage!'),
+                        'user_id': record.approval_user_id.id
+                    }
+                    record.activity_schedule(**activity_values)
             else:
                 record.activity_unlink(['project_task_approval.mail_activity_data_approval'])
         return result
