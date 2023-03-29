@@ -17,29 +17,8 @@ class GraphQL(http.Controller):
         # https://spec.graphql.org/June2018/#sec-Response-Format
         query = request.httprequest.data.decode()  # request.graphqlrequest
         response = request.env["graphql.handler"].handle_query(query)
-        payload = json.dumps(response, indent=4, default=str)
-        # print(payload)
+        payload = json.dumps(response, indent=4)
         return payload
-
-    @http.route(
-        "/graphql/schema",
-        auth="public",
-        type="http",
-        website=True,
-        sitemap=False,
-        csrf=False,
-    )
-    def graphql_schema(self):
-        # Nb: Not meant to be displayed
-        content = request.env["graphql.handler"].schema()
-        response = request.make_response(
-            content,
-            headers=[
-                ("Content-Type", "application/graphql"),
-                ("Content-Disposition", content_disposition("schema.graphql")),
-            ],
-        )
-        return response
 
     @http.route(
         "/graphiql", type="http", website=True, sitemap=False
