@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <field name="sequence" position="after">
                 <field name="subtask_criterion"/>
+                <field name="ignore_task_rule_domain" groups="base.group_no_one" widget="domain" options="{'model': 'project.task', 'in_dialog': true}"/>
             </field>
         </field>
     </record>
