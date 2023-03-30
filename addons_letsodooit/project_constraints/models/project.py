@@ -27,16 +27,16 @@ class ProjectTaskType(models.Model):
 
     @api.constrains('sequence')
     def ensure_special_stages_ordered(self):
-        for stage_id in self:
-            if stage_id.stage_type in ['initial', 'post_initial', 'pre_final', 'final']:
-                for projct_id in stage_id.project_ids:
-                    initial_stage = stage_id.get_initial_stage_for_task(task)
-                    post_initial_stage = stage_id.get_post_initial_stage_for_task(task)
-                    pre_final_stage = stage_id.get_pre_final_stage_for_task(task)
-                    final_stage = stage_id.get_final_stage_for_task(task)
-                    if not initial_stage.sequence < post_initial_stage.sequence:
+        for stage in self:
+            if stage.stage_type in ['initial', 'post_initial', 'pre_final', 'final']:
+                for project in stage.project_ids:
+                    initial_stage = stage.get_initial_stage_for_project(project)
+                    post_initial_stage = stage.get_post_initial_stage_for_project(project)
+                    pre_final_stage = stage.get_pre_final_stage_for_project(project)
+                    final_stage = stage.get_final_stage_for_project(project)
+                    if initial_stage and post_initial_stage and not initial_stage.sequence < post_initial_stage.sequence:
                         raise UserError(_('Please ensure that the sequence of the initial stage is lower than the sequence of the post initial stage!'))
-                    if not post_initial_stage.sequence < pre_final_stage.sequence:
+                    if post_initial_stage and pre_final_stage and not post_initial_stage.sequence < pre_final_stage.sequence:
                         raise UserError(_('Please ensure that the sequence of the post initial stage is lower than the sequence of the pre final stage!'))
-                    if not pre_final_stage.sequence < final_stage.sequence:
+                    if pre_final_stage and final_stage and not pre_final_stage.sequence < final_stage.sequence:
                         raise UserError(_('Please ensure that the sequence of the pre final stage is lower than the sequence of the final stage!'))

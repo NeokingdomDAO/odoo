@@ -4,17 +4,45 @@ from odoo.exceptions import UserError
 class Task(models.Model):
     _inherit = 'project.task'
 
-    user_id = fields.Many2one('res.users', string='Assignee', required=True, tracking=True)
-    user_ids = fields.Many2many('res.users', compute='_compute_user_ids', inverse='_inverse_user_ids', store=True)
-    is_approval_stage = fields.Boolean('Is Approval Stage', compute='_compute_is_approval_stage', store=True)
-    approval_user_id = fields.Many2one('res.users', string='Controller', required=True, tracking=True)
-    approval_date = fields.Date(string='Approval Date', readonly=True)
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string='Assignee',
+        required=True,
+        tracking=True,
+        default=lambda self: self.env.uid
+    )
+    user_ids = fields.Many2many(
+        comodel_name='res.users',
+        compute='_compute_user_ids',
+        inverse='_inverse_user_ids',
+        store=True
+    )
+    is_approval_stage = fields.Boolean(
+        string='Is Approval Stage',
+        compute='_compute_is_approval_stage',
+        store=True
+    )
+    approval_user_id = fields.Many2one(
+        comodel_name='res.users',
+        string='Controller',
+        tracking=True
+    )
+    approval_date = fields.Date(
+        string='Approval Date',
+        readonly=True
+    )
 
-    @api.constrains('user_id', 'approval_user_id')
+    @api.constrains('user_ids', 'approval_user_id')
     def check_user_and_approval_user_not_equal(self):
         for task in self:
-            if task.user_id == task.approval_user_id:
-                raise UserError(_('Please ensure that the assignee is not the controller.'))
+            if task.approval_user_id in task.user_ids:
+                raise UserError(_('Please ensure that no assignee is equal to the controller.'))
+
+    @api.constrains('stage_id')
+    def check_approval_user_id_set(self):
+        for task in self:
+            if task.is_approval_stage and not task.approval_user_id:
+                raise UserError(_('Please ensure that an approval user is set when the task is in approval stage.'))
 
     @api.depends('user_id')
     def _compute_user_ids(self):

@@ -3,22 +3,27 @@ from odoo import api, fields, models
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
-    stage_id = fields.Many2one('project.task.type', required=True)
+    stage_id = fields.Many2one(
+        comodel_name='project.task.type'
+    )
 
 
 class ProjectTaskType(models.Model):
     _inherit = 'project.task.type'
 
-    stage_type = fields.Selection([
-        ('initial', 'Initial'),
-        ('post_initial', 'Post-Initial'),
-        ('pre_final', 'Pre-Final'),
-        ('final', 'Final')
-    ], string="Stage Type", default=None)
+    stage_type = fields.Selection(
+        selection=[
+            ('initial', 'Initial'),
+            ('post_initial', 'Post-Initial'),
+            ('pre_final', 'Pre-Final'),
+            ('final', 'Final')
+        ],
+        string="Stage Type",
+        default=None
+    )
 
     def is_type(self, given_type):
-        self.ensure_one()
-        return self.stage_type == given_type
+        return self and self.stage_type == given_type
 
     def is_initial(self):
         return self.is_type('initial')

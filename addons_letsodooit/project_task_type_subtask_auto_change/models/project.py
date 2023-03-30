@@ -1,9 +1,25 @@
+import ast
 from odoo import api, fields, models
+from odoo.osv import expression
 
 class ProjectTaskType(models.Model):
     _inherit = 'project.task.type'
 
-    subtask_criterion = fields.Selection([('any', 'any'), ('all', 'all')], string='Subtask Criterion', required=True, default='any')
+    subtask_criterion = fields.Selection(
+        selection=[
+            ('any', 'any'),
+            ('all', 'all')
+        ],
+        string='Subtask Criterion',
+        required=True,
+        default='any'
+    )
+    ignore_task_rule_domain = fields.Char(
+        string='Ignore Automation Rule',
+        help='Set this domain in order to allow manual to set this stage manual if a certain criteria is true on a task.',
+        required=True,
+        default='[]'
+    )
 
     def is_before(self, stage):
         self.ensure_one()
@@ -53,7 +69,7 @@ class Task(models.Model):
 
     """
     We compute the stage of a task based on its subtask stages.
-    Basically, we check if there is a next 'all' stage (see project_task_type.py) looking from the current task's stage and if just one subtask already reached that stage.
+    Basically, we check if there is a next 'all' stage looking from the current task's stage and if just one subtask already reached that stage.
     If so we take the stage right before the 'all' stage as this is the greatest 'any' stage the task should be in.
     If not we take the greatest 'any' stage we can find.
 
@@ -62,13 +78,33 @@ class Task(models.Model):
     def compute_stage(self):
         self.ensure_one()
         assert len(self.child_ids) > 0
+        next_stopping_stage = self.get_next_ignore_stage()
         smallest_subtask_stage = self.get_smallest_subtask_stage()
         next_all_stage = self.project_id.get_next_all_stage_from(smallest_subtask_stage)
-        if next_all_stage and any(subtask.stage_id.is_equal_or_after(next_all_stage) for subtask in self.child_ids):
-            stage = self.project_id.get_previous_stage_from(next_all_stage)
+        if not next_stopping_stage or (next_all_stage and next_stopping_stage.sequence > next_all_stage.sequence):
+            next_stopping_stage = next_all_stage
+        if next_stopping_stage and any(subtask.stage_id.is_equal_or_after(next_stopping_stage) for subtask in self.child_ids):
+            stage = self.project_id.get_previous_stage_from(next_stopping_stage)
         else:
             stage = self.get_greatest_subtask_stage()
         return stage
+
+    def _is_valid_ignore_stage(self, stage):
+        domain = expression.AND([
+            [('id', '=', self.id)],
+            ast.literal_eval(stage.ignore_task_rule_domain)
+        ])
+        return stage.ignore_task_rule_domain != '[]' and self.env['project.task'].search_count(domain)
+
+    def get_next_ignore_stage(self):
+        self.ensure_one()
+        if self.stage_id:
+            possible_stages = self.env['project.task.type'].search([
+                ('ignore_task_rule_domain', '!=', '[]')
+            ], order='sequence')
+            for possible_stage in possible_stages:
+                if self._is_valid_ignore_stage(possible_stage):
+                    return possible_stage
 
     def get_subtask_stage_by(self, comparator):
         stage = False
@@ -90,10 +126,15 @@ class Task(models.Model):
         return self.get_subtask_stage_by(greater_than)
 
     def update_stage(self):
-        self.write({'stage_id': self.compute_stage().id})
+        if self.stage_id and self._is_valid_ignore_stage(self.stage_id):
+            return 
+        new_stage = self.compute_stage()
+        if new_stage:
+            super().write({'stage_id': new_stage.id})
 
     def write(self, values):
         result = super().write(values)
-        for parent in self.mapped('parent_id'):
-            parent.update_stage()
+        tasks_to_update = self.filtered(lambda task: task.child_ids) + self.mapped('parent_id')
+        for task in tasks_to_update:
+            task.update_stage()
         return result

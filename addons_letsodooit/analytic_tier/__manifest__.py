@@ -10,7 +10,7 @@
         'security/ir.model.access.csv',
         'views/account_analytic_views.xml',
         'views/analytic_line_views.xml'
-      ],
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,

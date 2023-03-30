@@ -5,7 +5,10 @@
     'sequence': 1,
     'description': """This module provides some basic constraints to project's data models to ensure data cleanness.""",
     'license': 'OPL-1',
-    'depends': ['project', 'project_task_type_attribution'],
+    'depends': [
+        'project',
+        'project_task_type_attribution'
+    ],
     'data': [],
     'installable': True,
     'auto_install': False,

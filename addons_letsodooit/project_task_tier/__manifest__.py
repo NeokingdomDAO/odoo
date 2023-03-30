@@ -5,8 +5,15 @@
     'sequence': 1,
     'description': """This module adds tiers to project tasks.""",
     'license': 'OPL-1',
-    'depends': ['project', 'project_task_approval', 'analytic_tier', 'analytic_tier_hr_employee'],
-    'data': ['views/project_views.xml'],
+    'depends': [
+        'project',
+        'project_task_approval',
+        'analytic_tier',
+        'analytic_tier_hr_employee'
+    ],
+    'data': [
+        'views/project_views.xml'
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,
