@@ -76,16 +76,16 @@ DATETIME_TZ = {
 }
 
 
-#DATETIME_TZ = {
-#    "name": "tz",
-#    "description": None,
-#    "type": {
-#        "kind": "ENUM",
-#        "name": "Timezone",
-#        "ofType": None
-#    },
-#    "defaultValue": None
-#}
+DATETIME_TZ = {
+    "name": "tz",
+    "description": None,
+    "type": {
+        "kind": "ENUM",
+        "name": "Timezone",
+        "ofType": None
+    },
+    "defaultValue": None
+}
 
 
 MODELS_ARGS = [
