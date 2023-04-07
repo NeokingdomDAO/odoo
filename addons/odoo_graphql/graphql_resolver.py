@@ -367,6 +367,8 @@ def _get_type_serializer_datetime(field, variables=None):
         tz = pytz.timezone(tz)
     fmt = data.get("format")
     def func(value):
+        if not value:
+            return
         if tz:
             value = value.replace(tzinfo=pytz.utc).astimezone(tz)
         if fmt:
