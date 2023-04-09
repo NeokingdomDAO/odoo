@@ -373,7 +373,7 @@ def _get_type_serializer_datetime(field, variables=None):
     def func(value):
         if not value:
             return
-        if isinstance(value, date):
+        if isinstance(value, date) and not isinstance(value, datetime):
             value = datetime.combine(value, datetime.min.time())
         if tz:
             value = value.replace(tzinfo=pytz.utc).astimezone(tz)
