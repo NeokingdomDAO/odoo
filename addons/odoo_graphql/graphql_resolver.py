@@ -17,6 +17,7 @@ from graphql.language.ast import (
 # from .utils import model2name, print_node as pn
 from .introspection import handle_introspection
 import pytz
+from datetime import date
 from datetime import datetime
 from .graphql_definitions.utils import timezones
 import logging
@@ -372,7 +373,7 @@ def _get_type_serializer_datetime(field, variables=None):
     def func(value):
         if not value:
             return
-        if isinstance(value, datetime.date):
+        if isinstance(value, date):
             value = datetime.combine(value, datetime.min.time())
         if tz:
             value = value.replace(tzinfo=pytz.utc).astimezone(tz)
