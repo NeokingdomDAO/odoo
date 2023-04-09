@@ -378,7 +378,7 @@ def _get_type_serializer_datetime(field, variables=None):
 
 def _get_type_serializer(field, ttype, variables=None):
     if ttype == "date":
-        return _get_type_serializer_date(field, variables=variables)
+        return _get_type_serializer_datetime(field, variables=variables)
     if ttype == "datetime":
         return _get_type_serializer_datetime(field, variables=variables)
     return lambda value: str(value)
