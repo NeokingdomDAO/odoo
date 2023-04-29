@@ -21,4 +21,6 @@ class Task(models.Model):
     def onchange_user_ids(self):
         employee_ids = self.env['hr.employee'].search([('user_id', 'in', self.user_ids.ids)])
         if employee_ids:
-            self.tier_id = employee_ids.tier_id[0]
+            possible_tiers = employee_ids.tier_id
+            if possible_tiers:
+                self.tier_id = possible_tiers[0]

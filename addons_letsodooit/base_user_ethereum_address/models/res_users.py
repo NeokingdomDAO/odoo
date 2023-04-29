@@ -20,7 +20,7 @@ class User(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            values['ethereum_address'] = values.get('ethereum_address', '').lower()
+            values['ethereum_address'] = (values.get('ethereum_address') or '').lower()
         return super().create(vals_list)
 
     def write(self, values):
