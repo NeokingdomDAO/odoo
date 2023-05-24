@@ -17,8 +17,6 @@ from graphql.language.ast import (
 # from .utils import model2name, print_node as pn
 from .introspection import handle_introspection
 import pytz
-from datetime import date
-from datetime import datetime
 from .graphql_definitions.utils import timezones
 import logging
 _logger = logging.getLogger(__name__)
@@ -357,8 +355,6 @@ def _get_type_serializer_date(field, variables=None):
     data = args2dict(field.arguments)
     fmt = data.get("format")
     def func(value):
-        if not value:
-            return
         if fmt:
             return value.strftime(fmt)
         return value.toordinal()
@@ -371,10 +367,6 @@ def _get_type_serializer_datetime(field, variables=None):
         tz = pytz.timezone(tz)
     fmt = data.get("format")
     def func(value):
-        if not value:
-            return
-        if isinstance(value, date) and not isinstance(value, datetime):
-            value = datetime.combine(value, datetime.min.time())
         if tz:
             value = value.replace(tzinfo=pytz.utc).astimezone(tz)
         if fmt:
@@ -384,7 +376,7 @@ def _get_type_serializer_datetime(field, variables=None):
 
 def _get_type_serializer(field, ttype, variables=None):
     if ttype == "date":
-        return _get_type_serializer_datetime(field, variables=variables)
+        return _get_type_serializer_date(field, variables=variables)
     if ttype == "datetime":
         return _get_type_serializer_datetime(field, variables=variables)
     return lambda value: str(value)
