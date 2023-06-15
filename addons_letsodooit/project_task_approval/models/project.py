@@ -25,7 +25,8 @@ class Task(models.Model):
     approval_user_id = fields.Many2one(
         comodel_name='res.users',
         string='Controller',
-        tracking=True
+        tracking=True,
+        required=True
     )
     approval_date = fields.Date(
         string='Approval Date',
@@ -42,7 +43,7 @@ class Task(models.Model):
     def check_approval_user_id_set(self):
         for task in self:
             if task.is_approval_stage and not task.approval_user_id:
-                raise UserError(_('Please ensure that an approval user is set when the task is in approval stage.'))
+                raise UserError(_('Please ensure that a controller is set when the task is in approval stage.'))
 
     @api.depends('user_id')
     def _compute_user_ids(self):

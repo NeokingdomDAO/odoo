@@ -122,9 +122,11 @@ class Test(Command, AbstractCommand):
     def get_modules_to_test(self):
         modules = self.get_module_names()
         if not modules:
-            cr.execute("SELECT name from ir_module_module WHERE state = 'installed'")
-            for row in cr.fetchall():
-                modules.append(row[0])
+            registry = odoo.registry(config['db_name'])
+            with registry.cursor() as cr:
+                cr.execute("SELECT name from ir_module_module WHERE state = 'installed'")
+                for row in cr.fetchall():
+                    modules.append(row[0])
         return modules
 
     def run_test(self, module_name):
