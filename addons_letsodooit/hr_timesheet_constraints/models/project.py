@@ -8,8 +8,8 @@ class ProjectTask(models.Model):
     def ensure_employee_part_of_assignees(self):
         for task in self:
             timesheet_ids = self.env['account.analytic.line'].search([('task_id', '=', task.id)])
-            for employee_id in timesheet_ids.mapped('employee_id'):
-                if not employee_id.user_id or employee_id.user_id not in task.user_ids:
+            for employee_id in timesheet_ids.employee_id:
+                if not employee_id.user_id or (task.user_ids and employee_id.user_id not in task.user_ids):
                     raise UserError(_("There is a mismatch between the person who tracked time and the assignees for this task. Please fix it first!"))
 
     @api.constrains('stage_id')

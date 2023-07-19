@@ -60,6 +60,17 @@ class AccountAnalyticLine(models.Model):
             error_message = _('Only one timesheet is allowed to be open ended!')
             raise UserError(self._add_first_case_to_error_message(error_message, overlapping_line_ids))
 
+    def check_user_is_allowed(self):
+        current_employee = self.env['hr.employee'].search([
+            ('user_id', '=', self.env.user.id)
+        ], limit=1)
+        if any(employee != current_employee for employee in self.employee_id):
+            raise UserError(_("You are not allowed to create/edit/delete timesheets for other users!"))
+
+    def check_not_final_stage(self):
+        if any(stage_id.is_final() for stage_id in self.task_id.stage_id):
+            raise UserError(_("After a task is approved you are not allowed to edit/delete a timesheet!"))
+
     @api.constrains('start', 'end')
     def ensure_not_overlapping(self):
         for line in self:
@@ -88,15 +99,17 @@ class AccountAnalyticLine(models.Model):
     def create(self, vals_list):
         for values in vals_list:
             self._sanitize_start_and_end(values)
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        records.check_user_is_allowed()
+        return records
 
     def write(self, values):
-        if any(stage_id.is_final() for stage_id in self.mapped('task_id.stage_id')):
-            raise UserError(_("After a task is approved you are not allowed to change values of the timesheet!"))
+        self.check_user_is_allowed()
+        self.check_not_final_stage()
         self._sanitize_start_and_end(values)
         return super().write(values)
 
     def unlink(self):
-        if any(stage_id.is_final() for stage_id in self.mapped('task_id.stage_id')):
-            raise UserError(_("After a task is approved you are not allowed to delete a timesheet!"))
+        self.check_user_is_allowed()
+        self.check_not_final_stage()
         return super().unlink()
