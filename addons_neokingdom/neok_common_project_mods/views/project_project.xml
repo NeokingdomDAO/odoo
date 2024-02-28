@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Reorder view modes for projects -->
+    <!-- Modifying default filter what makes more sense + to be abel to drag projects -->
+    <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="view_id" ref="project.view_project"/>
+        <field name="context">{'search_default_own_projects': uid}</field>
+    </record>
+
+    <!-- Hiding some not needed field from list to prevent confusion -->
+    <record id="neok_proj_view_project_mod" model="ir.ui.view">
+        <field name="name">neok_proj_view_project_mod</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='last_update_status']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
