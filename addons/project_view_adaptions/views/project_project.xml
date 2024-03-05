@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+     <record id="view_project_project_filter" model="ir.ui.view">
+        <field name="name">neokingdom.project.project_filter</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+
+            <!-- My Project now should be project where user is contributing in "any form" -->
+            <xpath expr="//filter[@name='own_projects']" position="attributes">
+                <attribute name="domain">[('contributing_users', 'in', [uid])]</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_project" model="ir.ui.view">
+        <field name="name">neokingdom.project.view_project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="action">action_view_tasks</attribute>
+                <attribute name="type">object</attribute>
+            </xpath>
+
+            <!-- Hiding some not needed field from list to prevent confusion -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='last_update_status']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

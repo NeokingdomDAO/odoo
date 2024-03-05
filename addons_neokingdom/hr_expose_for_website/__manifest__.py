@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    'name': '(NEOKingdom) HR Expose for Website',
-    'category': 'NEOKindom',
+    'name': 'HR Expose for Website',
+    'version': '16.0.1.0.0',
     'sequence': 20,
-    'summary': 'HR Expose for Website as API.',
-    'author': 'Bence Tóth (benhrisdev@gmail.com)',
-    'description': "HR Expose for Website as API for dynamic rendering. DO NOT INSTALL ALONG WITH website_hr_recruitment!",
+    'category': 'NEOKingdom',
+    'author': 'NEOKingdom Odoo Team (https://www.neokingdom.org)',
+    'description': "HR expose for NEOKingdom website as API for dynamic rendering. DO NOT INSTALL ALONG WITH website_hr_recruitment!",
     'depends': ['base', 'hr', 'hr_recruitment'],
     'data': [
         'security/ir.model.access.csv',
@@ -15,6 +15,7 @@
         'views/website_pages_views.xml',
     ],
     'installable': True,
+    'auto_install': False,
     'application': False,
-    'license': 'OPL-1',
+    'license': 'LGPL-3',
 }

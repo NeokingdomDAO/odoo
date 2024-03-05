@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_view_all_approval_task" model="ir.actions.act_window">
+        <field name="name">Approvals</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_my_approvals': 1, 'all_task': 0, 'default_user_ids': [(4, uid)]}</field>
+        <field name="search_view_id" ref="project_task_approval.view_task_search_form_extended"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p>
+            <p>
+                Organize your tasks by dispatching them across the pipeline.<br/>
+                Collaborate efficiently by chatting in real-time or via email.
+            </p>
+        </field>
+    </record>
+
+    <!-- Reorder view modes for projects -->
+    <!-- Modifying default filter what makes more sense + to be abel to drag projects -->
+    <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="view_id" ref="project.view_project"/>
+        <field name="context">{'search_default_own_projects': uid}</field>
+    </record>
+
+</odoo>
