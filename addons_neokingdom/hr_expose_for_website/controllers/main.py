@@ -10,6 +10,17 @@ _logger = logging.getLogger(__name__)
 
 
 class WebsiteHrRecruitment(http.Controller):
+    def _get_valid_job(self, job_id):
+        if not job_id:
+            return None
+
+        job = request.env['hr.job'].sudo().browse(int(job_id))
+
+        if not job.exists() or not job.website_published:
+            return None
+
+        return job
+
     @http.route('/neok-api/positions', auth="public", csrf=False, methods=['GET'], type='json')
     def neok_api_positions(self):
         try:
@@ -35,29 +46,7 @@ class WebsiteHrRecruitment(http.Controller):
     def neok_api_position_details(self):
         try:
             _data = json.loads(request.httprequest.data)
-            job_id = _data.get('job_id', False)
-
-            if not job_id:
-                return Response(
-                    json.dumps({'msg': 'Position not found.'}),
-                    status=404,
-                    mimetype='application/json'
-                )
-
-            job_id = request.env['hr.job'].sudo().browse(int(job_id))
-
-            if not job_id.exists():
-                return Response(
-                    json.dumps({'msg': 'Position not found.'}),
-                    status=404,
-                    mimetype='application/json'
-                )
-            if not job_id.website_published:
-                return Response(
-                    json.dumps({'msg': 'Position is closed!'}),
-                    status=400,
-                    mimetype='application/json'
-                )
+            job_id = self._get_valid_job(_data.get('job_id', False))
 
             return {
                 'id': job_id.id,
@@ -83,29 +72,7 @@ class WebsiteHrRecruitment(http.Controller):
             _data = json.loads(request.httprequest.data)
 
             # check if applied job exists and open
-            job_id = _data.get('job_id', False)
-
-            if not job_id:
-                return Response(
-                    json.dumps({'msg': 'Position not found.'}),
-                    status=404,
-                    mimetype='application/json'
-                )
-
-            job_id = request.env['hr.job'].sudo().browse(int(job_id))
-
-            if not job_id.exists():
-                return Response(
-                    json.dumps({'msg': 'Position not found.'}),
-                    status=404,
-                    mimetype='application/json'
-                )
-            if not job_id.website_published:
-                return Response(
-                    json.dumps({'msg': 'Position is closed!'}),
-                    status=400,
-                    mimetype='application/json'
-                )
+            job_id = self._get_valid_job(_data.get('job_id', False))
 
             # get required fields
             for key, value in _data.items():
