@@ -8,12 +8,26 @@ class ProjectProject(models.Model):
 
     tag_ids = fields.Many2many(
         comodel_name='project.tags',
-        required=True
+        required=True,
+        tracking=True
     )
     date_deadline = fields.Date(
         required=True,
-        default=lambda self: fields.Date.today()
+        default=lambda self: fields.Date.today(),
+        tracking=True
     )
+    name = fields.Char(tracking=True)
+    label_tasks = fields.Char(tracking=True)
+    partner_id = fields.Many2one(tracking=True)
+    user_id = fields.Many2one(tracking=True)
+    date_start = fields.Date(tracking=True)
+    date = fields.Date(tracking=True)
+    allocated_hours = fields.Float(tracking=True)
+    description = fields.Text(tracking=True)
+    privacy_visibility = fields.Selection(tracking=True)
+    allow_subtasks = fields.Boolean(tracking=True)
+    allow_task_dependencies = fields.Boolean(tracking=True)
+    allow_timesheets = fields.Boolean(tracking=True)
     contributing_users = fields.Many2many('res.users', string='Contributing Users', compute='_compute_contributing_users', store=True, readonly=True)
 
     @api.depends('user_id', 'task_ids')
