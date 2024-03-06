@@ -20,7 +20,10 @@ class ProjectProject(models.Model):
     def _compute_contributing_users(self):
         for _project in self:
             # project manager is always a contributing user
-            _contributing_users = {_project.user_id.id}
+            if _project.user_id.exists():
+                _contributing_users = {_project.user_id.id}
+            else:
+                _contributing_users = {}
 
             # add task assignees also as contributors
             for task in _project.task_ids:

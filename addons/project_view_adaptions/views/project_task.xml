@@ -143,22 +143,18 @@
         </field>
     </record>
 
-    <record id="action_view_all_task" model="ir.actions.act_window">
-        <field name="name">Tasks</field>
-        <field name="res_model">project.task</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_my_tasks': 1, 'search_default_open_tasks': 1, 'all_task': 0,
-                               'default_user_ids': [(4, uid)]}</field>
-        <field name="search_view_id" ref="project.view_task_search_form_extended"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No tasks found. Let's create one!
-            </p>
-            <p>
-                Organize your tasks by dispatching them across the pipeline.
-                <br/>
-                Collaborate efficiently by chatting in real-time or via email.
-            </p>
+    <record id="view_task_search_form" model="ir.ui.view">
+        <field name="name">neokingdom.project.task.search.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+
+            <!-- My Project now should be project where user is contributing in "any form" -->
+            <xpath expr="//filter[@name='my_tasks']" position="attributes">
+                <attribute name="domain">[('contributing_users', 'in', [uid])]</attribute>
+            </xpath>
+
         </field>
     </record>
 
