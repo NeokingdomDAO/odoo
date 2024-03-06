@@ -22,7 +22,6 @@ class ProjectTask(models.Model):
     project_id = fields.Many2one(tracking=True)
     date_deadline = fields.Date(tracking=True)
     user_ids = fields.Many2many(tracking=True)
-    description = fields.Text(tracking=True)
     planned_hours = fields.Float(tracking=True)
     partner_id = fields.Many2one(tracking=True)
     sequence = fields.Integer(tracking=True)
@@ -45,6 +44,22 @@ class ProjectTask(models.Model):
             _task.contributing_users = [(6, 0, list(_contributing_users))]
 
     def write(self, values):
+        changing_desc = 'description' in values
+
+        if changing_desc:
+            # create id: old description dict
+            old_desc = {_task.id: _task.description for _task in self}
+
         if values.get('parent_id', False):
             values['display_project_id'] = None
-        return super().write(values)
+
+        res = super().write(values)
+
+        # "manually" post description change to messages, since tracking attributes cause html widget to stop working
+        if changing_desc:
+            for _task in self:
+                _task.message_post(body='<p>Description changed</p><p>{0}</p><p>→</p><p>{1}</p>'.format(
+                    old_desc.get(_task.id, ''), values["description"]
+                ))
+
+        return res
