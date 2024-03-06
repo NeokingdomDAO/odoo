@@ -4,7 +4,7 @@
     <record id="action_view_all_approval_task" model="ir.actions.act_window">
         <field name="name">Approvals</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban,calendar,pivot,graph,activity</field>
         <field name="context">{'search_default_my_approvals': 1, 'all_task': 0, 'default_user_ids': [(4, uid)]}</field>
         <field name="search_view_id" ref="project_task_approval.view_task_search_form_extended"/>
         <field name="help" type="html">

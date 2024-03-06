@@ -5,7 +5,7 @@
     'category': 'NEOKingdom',
     'author': 'NEOKingdom Odoo Team (https://www.neokingdom.org)',
     'description': """Adds a top bar to the project management section, which displays the previously opened tasks.""",
-    'depends': ['base', 'web', 'project'],
+    'depends': ['base', 'web', 'project', 'project_view_adaptions'],
     'data': [
         'security/ir.model.access.csv',
         'data/sys_param.xml',
