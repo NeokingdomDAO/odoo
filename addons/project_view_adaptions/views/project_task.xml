@@ -7,6 +7,10 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
 
+            <xpath expr="//button[@name='action_assign_to_me']" position="before">
+                <button name="action_create_pub_link" string="Create publicly shareable link" type="object"/>
+            </xpath>
+
             <!-- Modify the html field's styling only on this form -->
             <xpath expr="//form" position="inside">
                 <style>

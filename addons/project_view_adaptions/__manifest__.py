@@ -7,6 +7,7 @@
     'author': 'NEOKingdom Odoo Team (https://www.neokingdom.org)',
     'description': """This module adapts the views of project module to align with NEOCommonwealth instances.""",
     'depends': [
+        'portal',
         'project',
         'project_task_approval'
     ],

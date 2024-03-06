@@ -63,3 +63,12 @@ class ProjectTask(models.Model):
                 ))
 
         return res
+
+    def action_create_pub_link(self):
+        return {
+            'name': 'Create publicly shareable link',
+            'type': 'ir.actions.act_window',
+            'res_model': 'portal.share',
+            'view_mode': 'form',
+            'target': 'new'
+        }
