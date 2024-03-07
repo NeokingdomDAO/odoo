@@ -1,0 +1,48 @@
+.oe_kanban_card {
+  div[name="name"] span {
+    font-size: 1.175rem !important;
+  }
+
+  div[name="project_id"] span {
+    font-style: italic !important;
+    color: grey !important;
+  }
+
+  .o_kanban_record_bottom div {
+    justify-content: end;
+  }
+
+  .o_field_many2many_tags .o_tag {
+    border-radius: 12px;
+    padding: 3px 6px;
+    margin-top: 3px !important;
+
+    @for $size from 1 through length($o-colors) {
+      &.o_tag_color_#{$size - 1} {
+        @if $size == 1 {
+          & {
+            background-color: $o-view-background-color !important;
+            color: nth($o-colors, $size) !important;
+            box-shadow: inset 0 0 0 1px !important;
+          }
+          &:focus-within {
+            color: darken(nth($o-colors, $size), 40%) !important;
+          }
+          &::after {
+            background-color: nth($o-colors, $size) !important;
+          }
+        } @else {
+          &, &::after {
+            background-color: nth($o-colors, $size) !important;
+            color: color-contrast(nth($o-colors, $size)) !important;
+          }
+        }
+      }
+    }
+
+    div {
+      margin-left: -10px;
+      font-weight: 500;
+    }
+  }
+}

@@ -36,6 +36,10 @@
                 <attribute name="optional">hide</attribute>
             </xpath>
 
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+
         </field>
     </record>
 

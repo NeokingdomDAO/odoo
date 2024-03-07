@@ -17,6 +17,11 @@
         'views/project_project.xml',
         'views/project_task.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'project_view_adaptions/static/src/scss/project.scss',
+        ]
+    },
     'installable': True,
     'auto_install': False,
     'application': False,

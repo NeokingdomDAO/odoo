@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="edit_project" model="ir.ui.view">
+        <field name="name">neokingdom.project.edit_project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='tag_ids']" position="replace">
+                <field name="project_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                       domain="[('id', 'not in', [%(neok_project_management.neok_circle_outreach)d, %(neok_project_management.neok_circle_office)d,
+                       %(neok_project_management.neok_circle_recruiting_hr)d, %(neok_project_management.neok_circle_odoo)d,
+                       %(neok_project_management.neok_circle_dapp)d, %(neok_project_management.neok_circle_smart_contracts)d,
+                       %(neok_project_management.neok_circle_design)d, %(neok_project_management.neok_circle_bizdev)d])]"
+                />
+                <field name="circle_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                       domain="[('id', 'in', [%(neok_project_management.neok_circle_outreach)d, %(neok_project_management.neok_circle_office)d,
+                       %(neok_project_management.neok_circle_recruiting_hr)d, %(neok_project_management.neok_circle_odoo)d,
+                       %(neok_project_management.neok_circle_dapp)d, %(neok_project_management.neok_circle_smart_contracts)d,
+                       %(neok_project_management.neok_circle_design)d, %(neok_project_management.neok_circle_bizdev)d])]"
+                />
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
