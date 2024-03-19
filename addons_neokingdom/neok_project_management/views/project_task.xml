@@ -36,6 +36,9 @@
                     <filter string="Circle: Design" name="neok_circle_design" domain="[('tag_ids', 'in', [%(neok_project_management.neok_circle_design)d])]"/>
                     <filter string="Circle: BizDev" name="neok_circle_bizdev" domain="[('tag_ids', 'in', [%(neok_project_management.neok_circle_bizdev)d])]"/>
                     <separator/>
+                    <filter name="create_date" date="create_date"/>
+                    <filter name="date_deadline" date="date_deadline"/>
+                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Tag" name="tag" context="{'group_by': 'tag_ids'}"/>
