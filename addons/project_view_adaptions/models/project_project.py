@@ -19,7 +19,6 @@ class ProjectProject(models.Model):
     name = fields.Char(tracking=True)
     label_tasks = fields.Char(tracking=True)
     partner_id = fields.Many2one(tracking=True)
-    user_id = fields.Many2one(tracking=True)
     date_start = fields.Date(tracking=True)
     date = fields.Date(tracking=True)
     allocated_hours = fields.Float(tracking=True)
@@ -54,10 +53,11 @@ class ProjectProject(models.Model):
             if _project.user_id.exists():
                 _contributing_users = {_project.user_id.id}
             else:
-                _contributing_users = {}
+                _contributing_users = set()
 
             # add task assignees also as contributors
             for task in _project.task_ids:
                 _contributing_users.update(task.user_ids.ids)
 
-            _project.contributing_users = [(6, 0, list(_contributing_users))]
+            if len(_contributing_users):
+                _project.contributing_users = [(6, 0, list(_contributing_users))]

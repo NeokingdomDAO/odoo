@@ -13,10 +13,13 @@
                 <search string="Tasks">
                     <field name="name" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
                     <field name="tag_ids"/>
+                    <field name="user_ids" invisible="1"/>
                     <field name="contributing_users" filter_domain="[('contributing_users.name', 'ilike', self), ('contributing_users.active', 'in', [True, False])]"/>
                     <field name="approval_user_id" string="Controller" filter_domain="[('approval_user_id.name', 'ilike', self)]"/>
                     <field name="project_id"/>
                     <field name="description"/>
+                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}" invisible="1"/>
+                    <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]" invisible="1"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('contributing_users', 'in', [uid])]"/>
                     <filter string="Future Activities" name="activities_upcoming_all"
                             domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>

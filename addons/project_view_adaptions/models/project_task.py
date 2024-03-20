@@ -8,7 +8,7 @@ class ProjectTask(models.Model):
 
     tag_ids = fields.Many2many(
         comodel_name='project.tags',
-        required=True,
+        required=False,
         tracking=True
     )
     date_deadline = fields.Date(
@@ -36,12 +36,13 @@ class ProjectTask(models.Model):
             if _task.approval_user_id.exists():
                 _contributing_users = {_task.approval_user_id.id}
             else:
-                _contributing_users = {}
+                _contributing_users = set()
 
             # add task assignees also as contributors
-            _contributing_users.update(_task.user_ids.ids)
+            if _task.user_ids.exists():
+                _contributing_users.update(_task.user_ids.ids)
 
-            _task.contributing_users = [(6, 0, list(_contributing_users))]
+                _task.contributing_users = [(6, 0, list(_contributing_users))]
 
     def write(self, values):
         changing_desc = 'description' in values
