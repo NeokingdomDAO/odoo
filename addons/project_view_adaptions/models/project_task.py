@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 from odoo import fields, models
 
-class Task(models.Model):
+
+class ProjectTask(models.Model):
     _inherit = 'project.task'
 
     tag_ids = fields.Many2many(

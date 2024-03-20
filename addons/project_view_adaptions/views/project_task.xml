@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_task_form2" model="ir.ui.view">
+        <field name="name">project.task.form.neokingdom</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+
+            <field name="display_project_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <page name="sub_tasks_page" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['|', ('allow_subtasks', '=', False), ('parent_id', '!=', False)]}</attribute>
+            </page>
+
+            <field name="kanban_state" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="user_ids" position="after">
+                <field name="date_deadline" position="move"/>
+                <field name="tag_ids" position="move"/>
+            </field>
+
+            <field name="partner_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <xpath expr="//page[@name='sub_tasks_page']" position="replace"/>
+
+            <xpath expr="//page[@name='description_page']" position="before">
+                <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
+                    <field name="child_ids"
+                           context="{'search_view_ref' : 'project.view_task_search_form_extended', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
+                           domain="['!', ('id', 'parent_of', id)]">
+                        <tree decoration-muted="is_closed == True">
+                            <field name="legend_normal" invisible="1"/>
+                            <field name="legend_done" invisible="1"/>
+                            <field name="legend_blocked" invisible="1"/>
+                            <field name="project_id" invisible="1"/>
+                            <field name="is_closed" invisible="1"/>
+                            <field name="allow_milestones" invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="priority" widget="priority" optional="hide" nolabel="1"/>
+                            <field name="id" optional="hide"/>
+                            <field name="child_text" invisible="1"/>
+                            <field name="allow_subtasks" invisible="1"/>
+                            <field name="name" widget="name_with_subtask_count"/>
+                            <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
+                            <field name="planned_hours" string="Allocated Hours"/>
+                            <field name="effective_hours"/>
+                            <field name="display_project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
+                            <field name="milestone_id" optional="hide"
+                                   context="{'default_project_id': display_project_id or project_id}"
+                                   attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"/>
+                            <field name="partner_id" optional="hide"/>
+                            <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
+                            <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"
+                                   optional="hide"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                                   optional="hide"/>
+                            <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
+                                   decoration-warning="rating_last_text == 'ok'"
+                                   decoration-success="rating_last_text == 'top'"
+                                   attrs="{'invisible': [('rating_last_text', '=', 'none')]}" class="fw-bold"
+                                   widget="badge" optional="hide"/>
+                            <field name="kanban_state" widget="state_selection" optional="hide"
+                                   options="{'hide_label': True}" nolabel="1"/>
+                            <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_task_tree2" model="ir.ui.view">
+        <field name="name">project.task.tree.neokingdom</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+
+            <field name="user_ids" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+
+            <field name="activity_ids" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+
+            <field name="tag_ids" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+
+            <field name="kanban_state" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+
+            <field name="date_deadline" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_task_kanban">
+        <field name="name">project.task.kanban</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='kanban_state']/.." position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_view_all_task" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_my_tasks': 1, 'search_default_open_tasks': 1, 'all_task': 0,
+                               'default_user_ids': [(4, uid)]}</field>
+        <field name="search_view_id" ref="project.view_task_search_form_extended"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p>
+            <p>
+                Organize your tasks by dispatching them across the pipeline.
+                <br/>
+                Collaborate efficiently by chatting in real-time or via email.
+            </p>
+        </field>
+    </record>
+
+
+    <record id="neok_proj_view_task_form2_mod" model="ir.ui.view">
+        <field name="name">neok_proj_view_task_form2_mod</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='sub_tasks_page']" position="replace">
+                <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
+                    <field name="child_ids"
+                           context="{'search_view_ref' : 'project.view_task_search_form_extended', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
+                           domain="['!', ('id', 'parent_of', id)]">
+                        <tree decoration-muted="is_closed == True">
+                            <field name="legend_normal" invisible="1"/>
+                            <field name="legend_done" invisible="1"/>
+                            <field name="legend_blocked" invisible="1"/>
+                            <field name="project_id" invisible="1"/>
+                            <field name="is_closed" invisible="1"/>
+                            <field name="allow_milestones" invisible="1"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="priority" widget="priority" optional="hide" nolabel="1"/>
+                            <field name="id" optional="hide"/>
+                            <field name="child_text" invisible="1"/>
+                            <field name="allow_subtasks" invisible="1"/>
+                            <field name="name" widget="name_with_subtask_count"/>
+                            <field name="user_ids" widget="many2many_tags"/>
+                            <field name="planned_hours" string="Allocated Hours"/>
+                            <field name="effective_hours"/>
+                            <field name="display_project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
+                            <field name="milestone_id" optional="hide"
+                                   context="{'default_project_id': display_project_id or project_id}"
+                                   attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"/>
+                            <field name="partner_id" optional="hide"/>
+                            <field name="user_ids" widget="many2many_avatar_user" optional="show"
+                                   domain="[('share', '=', False), ('active', '=', True)]"/>
+                            <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
+                            <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"
+                                   optional="hide"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                                   optional="hide"/>
+                            <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
+                                   decoration-warning="rating_last_text == 'ok'"
+                                   decoration-success="rating_last_text == 'top'"
+                                   attrs="{'invisible': [('rating_last_text', '=', 'none')]}" class="fw-bold"
+                                   widget="badge" optional="hide"/>
+                            <field name="kanban_state" widget="state_selection" optional="hide"
+                                   options="{'hide_label': True}" nolabel="1"/>
+                            <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
