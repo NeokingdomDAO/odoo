@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="bug_submission_list" model="ir.ui.view">
+        <field name="name">Bug Submission List</field>
+        <field name="model">neok.helpdesk.bug.submission</field>
+        <field name="priority" eval="22"/>
+        <field name="arch" type="xml">
+            <tree create="false" delete="false">
+
+                <field name="sequence" widget='handle'/>
+                <field name="name" string="Identifier"/>
+                <field name="title"/>
+                <field name="dao_name"/>
+                <field name="state"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="bug_submission_form" model="ir.ui.view">
+        <field name="name">Bug Submission Form</field>
+        <field name="model">neok.helpdesk.bug.submission</field>
+        <field name="priority" eval="22"/>
+        <field name="arch" type="xml">
+            <form create="false" delete="false">
+
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button string="Mark as Done" type="object" name="action_done" class="btn-secondary"
+                            attrs="{'invisible': [('state', 'in', ['done', 'irrelevant'])]}"/>
+                    <button string="Mark as Irrelevant" type="object" name="action_irrelevant" class="btn-secondary"
+                            attrs="{'invisible': [('state', 'in',  ['done', 'irrelevant'])]}"/>
+                </header>
+
+                <group>
+                    <group name="ticket_details" string="Ticket Details">
+                        <field name="create_date"/>
+                        <field name="name" string="Identifier"/>
+                        <field name="title"/>
+                        <field name="dao_name"/>
+                        <field name="description"/>
+                    </group>
+                    <group name="sender_details" string="Sender Details">
+                        <field name="partner_id" string="Reporter"/>
+                        <field name="sender_email"/>
+                    </group>
+                </group>
+                <group>
+                    <group name="attachment_details">
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </group>
+                    <group></group>
+                </group>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

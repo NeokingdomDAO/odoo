@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="bug_submission_action" model="ir.actions.act_window">
+        <field name="name">Bug Submission List</field>
+        <field name="res_model">neok.helpdesk.bug.submission</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

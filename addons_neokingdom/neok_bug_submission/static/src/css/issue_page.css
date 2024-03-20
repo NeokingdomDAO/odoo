@@ -1,0 +1,226 @@
+@keyframes fadeInAndScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.725);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.issue-page-container {
+    background-image: linear-gradient(180deg, rgba(33, 37, 41, 0.01), rgba(33, 37, 41, 1) 85%), radial-gradient(ellipse at top left, rgb(15 115 250 / 40%), transparent 50%), radial-gradient(ellipse at top right, rgb(182 18 106 / 57%), transparent 50%), radial-gradient(ellipse at center right, rgb(80 16 121 / 67%), transparent 50%), radial-gradient(ellipse at center left, rgb(86 16 119), transparent 50%);
+    background-color: #212529;
+    margin: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.issue-page-container .title h1 {
+    font-family: system-ui, -apple-system, Arial, sans-serif;
+    font-size: 4rem;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    color: white;
+    text-align: center;
+    animation: fadeInAndScale 0.3s ease forwards;
+}
+
+.issue-page-container .title h2 {
+    font-family: system-ui, -apple-system, Arial, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    color: white;
+    text-align: center;
+    animation: fadeInAndScale 0.3s ease forwards;
+}
+
+.issue-page-container .title img {
+    height: auto;
+    max-width: 200px;
+    margin-bottom: 2.25rem;
+    animation: fadeInAndScale 0.425s ease forwards;
+}
+
+.issue-btn {
+    border: 3px solid #5b0d5d !important;
+    border-radius: 1.45rem;
+    transition: all .25s ease-in-out;
+    color: white;
+    background: linear-gradient(to right, #551178ba, #e71264b8);
+    padding: 0.65rem 1.25rem;
+    font-size: 1.45rem;
+    transform: scale(1);
+    font-weight: bold;
+}
+
+.issue-btn:hover {
+    opacity: .9;
+    transform: scale(1.025);
+}
+
+.issue-page-container .body-container {
+    transition: all .45s ease-in-out;
+}
+
+.issue-page-container .body {
+    animation: fadeInAndScale 0.725s ease forwards;
+}
+
+.issue-page-container .footer {
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 1%;
+    background-color: #212529;
+    animation: fadeInAndScale 1s ease forwards;
+}
+
+.issue-page-container .footer .social-container {
+    color: white;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+}
+
+.issue-page-container .footer .social-container div {
+    padding: 8px;
+}
+
+.issue-page-container .footer .social-container div a {
+    text-decoration: none;
+    color: white;
+}
+
+.report-bug-body {
+    overflow: hidden;
+    height: 0;
+    transition: all .45s ease-in-out;
+}
+
+.report-bug-body.show {
+    animation: fadeInAndScale 1s ease forwards;
+    height: 70rem;
+}
+
+.report-bug-body h2 {
+    color: white;
+    font-weight: bold;
+}
+
+.report-bug-body input:not([type="checkbox"]) {
+    border: 3px solid #5b0d5d !important;
+    border-radius: 1.45rem;
+    font-size: 1.15rem;
+    padding: 0.85rem 2rem;
+    width: 45%;
+    margin: auto;
+    font-weight: bold;
+}
+
+.report-bug-body textarea {
+    border: 3px solid #5b0d5d !important;
+    border-radius: 1.45rem;
+    font-size: 1.15rem;
+    padding: 0.85rem 2rem;
+    width: 45%;
+    margin: auto;
+    font-weight: bold;
+}
+
+.report-bug-body input:focus {
+    box-shadow: 0 0 0 0.25rem #4c1079;
+}
+
+.report-bug-body textarea:focus {
+    box-shadow: 0 0 0 0.25rem #4c1079;
+}
+
+.report-bug-body .form-label, .form-text, .form-check-label {
+    color: white;
+    font-family: system-ui, -apple-system, Arial, sans-serif;
+    font-size: 1.25rem;
+}
+
+.report-bug-body .form-check {
+    width: fit-content;
+    margin: auto;
+}
+
+.report-bug-body .form-check a {
+    text-decoration: none;
+    color: white;
+}
+
+.report-bug-body .form-check input {
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.report-bug-body .form-check label {
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #f01363 !important;
+    border-color: #f01363 !important;
+}
+
+.report-bug-response-body {
+    animation: fadeInAndScale 0.425s ease forwards;
+}
+
+.report-bug-response-body p {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1440px) {
+    .report-bug-body .form-check {
+        max-width: 60%;
+    }
+
+    .report-bug-body input:not([type="checkbox"]) {
+        width: 60%;
+    }
+
+    .report-bug-body textarea {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .issue-page-container .title img {
+        max-width: 150px;
+    }
+
+    .issue-page-container .title h1 {
+        font-size: 2.45rem;
+    }
+
+    .issue-page-container .title h2 {
+        font-size: 1.45rem;
+    }
+
+    .issue-page-container .footer .social-container {
+        flex-flow: wrap;
+    }
+
+    .report-bug-body .form-check {
+        max-width: 90%;
+    }
+
+    .report-bug-body input:not([type="checkbox"]),textarea  {
+        width: 90%;
+    }
+
+    .report-bug-body textarea  {
+        width: 90%;
+    }
+}
