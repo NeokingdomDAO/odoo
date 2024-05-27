@@ -40,6 +40,24 @@
                 <attribute name="optional">show</attribute>
             </xpath>
 
+            <xpath expr="//tree/field[last()]" position="after">
+                <button name="action_open_project" type="object" title="Open Project" string="Open Project" class="btn btn-link float-end"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="edit_project" model="ir.ui.view">
+        <field name="name">neokingdom.project.project.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <button name="action_open_migrate_open_tasks_dialog" type="object" string="Migrate Tasks" class="btn btn-primary"/>
+            </xpath>
+
         </field>
     </record>
 
