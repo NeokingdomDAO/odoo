@@ -31,7 +31,7 @@ class Task(models.Model):
     def check_user_and_approval_user_not_equal(self):
         for task in self:
             if task.approval_user_id in task.user_ids:
-                raise UserError(_('Please ensure that no assignee is equal to the controller.'))
+                raise UserError(_('Please ensure the assignee and controller are not the same.'))
 
     @api.constrains('stage_id')
     def check_approval_user_id_set(self):
