@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api
+from odoo.exceptions import ValidationError
 
 
 class ProjectProject(models.Model):
@@ -61,3 +62,48 @@ class ProjectProject(models.Model):
 
             if len(_contributing_users):
                 _project.contributing_users = [(6, 0, list(_contributing_users))]
+
+    def action_open_project(self):
+        return {
+            'view_mode': 'form',
+            'res_model': 'project.project',
+            'res_id': self.id,
+            'type': 'ir.actions.act_window',
+            'context': self._context
+        }
+
+    def action_open_migrate_open_tasks_dialog(self):
+        return {
+            'name': 'Migrate open tasks from previous project',
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.migrate.tasks.dialog',
+            'view_mode': 'form',
+            'target': 'new'
+        }
+
+
+class ProjectMigrateTasksDialog(models.TransientModel):
+    _name = 'project.migrate.tasks.dialog'
+    _description = 'Migrate Project Tasks Dialog'
+
+    prev_project_id = fields.Many2one('project.project', string='Previous Project', required=True)
+    task_ids = fields.Many2many('project.task', string='Tasks to migrate', required=True)
+
+    @api.onchange('prev_project_id')
+    def _onchange_prev_project_id(self):
+        self.task_ids = self.env['project.task'].search([
+            ('project_id', '=', self.prev_project_id.id), ('stage_id.stage_type', 'not in', ['final', 'pre_final'])
+        ])
+
+    def action_migrate_open_tasks(self):
+        active_model = self._context.get('active_model')
+        active_id = self._context.get('active_id')
+        opened_project = self.env[active_model].browse(active_id)
+
+        if not active_model or not active_id or not opened_project.exists():
+            return ValidationError('Migration failed.. Contact your system administrator.')
+
+        for task in self.task_ids:
+            task.write({'project_id': opened_project.id})
+
+        return {'type': 'ir.actions.act_window_close'}

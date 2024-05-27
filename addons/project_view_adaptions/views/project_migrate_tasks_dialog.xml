@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_project_migrate_tasks_dialog_form" model="ir.ui.view">
+        <field name="name">project.migrate.tasks.dialog.form</field>
+        <field name="model">project.migrate.tasks.dialog</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="prev_project_id"/>
+                        <field name="task_ids">
+                            <tree string="Tasks">
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="stage_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_migrate_open_tasks" string="Migrate" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
