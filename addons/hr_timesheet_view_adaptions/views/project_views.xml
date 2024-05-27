@@ -8,13 +8,13 @@
             <xpath expr="//page[@id='timesheets_tab']//field[@name='progress']/../.." position="attributes">
                 <attribute name="string">Time Management</attribute>
                 <attribute name="attrs">{'invisible': [('allow_timesheets', '=', False)]}</attribute>
-                <attribute name="name">timesheet_group</attribute>
+                <attribute name="name">timesheets_tab</attribute>
                 <attribute name="groups">hr_timesheet.group_hr_timesheet_user</attribute>
             </xpath>
             <xpath expr="//notebook" position="before">
-                <group name="timesheet_group" position="move"/>
+                <group name="timesheets_tab" position="move"/>
             </xpath>
-            <group name="timesheet_group" position="inside">
+            <group name="timesheets_tab" position="inside">
                 <group name="timesheet_error" position="move"/>
                 <field name="timesheet_ids" position="move"/>
                 <group name="project_hours" position="move"/>
@@ -31,6 +31,9 @@
             </field>
             <field name="date" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </field>
+            <field name="employee_id" position="attributes">
+                <attribute name="string">Assignee</attribute>
             </field>
         </field>
     </record>

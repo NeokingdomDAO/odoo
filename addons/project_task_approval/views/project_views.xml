@@ -19,25 +19,28 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+
             <button name="action_assign_to_me" position="before">
                 <field name="is_approval_stage" invisible="1"/>
-                <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_approval_stage', '=', False), ('approval_user_id', '!=', uid)]}"/>
+                <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': &quot;['|', ('is_approval_stage', '=', False), ('approval_user_id', '!=', uid)]&quot;}"/>
             </button>
-            <field name="user_ids" position="attributes">
-                <attribute name="invisible">1</attribute>
+
+            <field name="project_id" position="after">
+                <field name="date_deadline" position="move"/>
+                <field name="tag_ids" position="move"/>
             </field>
+
             <field name="partner_phone" position="after">
-                <field name="user_id"/>
+                <field name="user_ids" position="move"/>
                 <field name="approval_user_id"/>
                 <field name="approval_date" readonly="1" attrs="{'invisible': [('approval_date', '=', False)]}"/>
             </field>
+
             <xpath expr="//page[@name='sub_tasks_page']//field[@name='user_ids']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//page[@name='sub_tasks_page']//field[@name='user_ids']" position="attributes">
-                <fiedl name="user_id"/>
+                <fiedl name="user_ids"/>
                 <field name="approval_user_id"/>
             </xpath>
+
         </field>
     </record>
 </odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="neok_circle_outreach" model="project.tags">
+            <field name="name">Circle: Outreach</field>
+        </record>
+
+        <record id="neok_circle_office" model="project.tags">
+            <field name="name">Circle: Office</field>
+        </record>
+
+        <record id="neok_circle_recruiting_hr" model="project.tags">
+            <field name="name">Circle: Recruiting / HR</field>
+        </record>
+
+        <record id="neok_circle_odoo" model="project.tags">
+            <field name="name">Circle: Odoo</field>
+        </record>
+
+        <record id="neok_circle_dapp" model="project.tags">
+            <field name="name">Circle: Dapp</field>
+        </record>
+
+        <record id="neok_circle_smart_contracts" model="project.tags">
+            <field name="name">Circle: Smart Contracts</field>
+        </record>
+
+        <record id="neok_circle_design" model="project.tags">
+            <field name="name">Circle: Design</field>
+        </record>
+
+        <record id="neok_circle_bizdev" model="project.tags">
+            <field name="name">Circle: BizDev</field>
+        </record>
+
+    </data>
+</odoo>

@@ -2,7 +2,7 @@
     'name' : 'HR Timesheet Views',
     'version' : '16.0.1.0.0',
     'author': 'Peter Schwarz (info@peter-schwarz.it)',
-    'sequence': 1,
+    'sequence': 20,
     'description': """This module adapts the hr timesheet modules' views accordingly.""",
     'license': 'OPL-1',
     'depends': [

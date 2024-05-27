@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Re-Creating search view to show filters that NEOKingdom needs -->
+    <record id="view_project_project_filter" model="ir.ui.view">
+        <field name="name">neokingdom.project.project.select</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//search" position="replace">
+                <search string="Tasks">
+                    <field name="name" string="Project"/>
+                    <field name="contributing_users" filter_domain="[('contributing_users.name', 'ilike', self), ('contributing_users.active', 'in', [True, False])]"/>
+                    <field name="stage_id" groups="project.group_project_stages"/>
+                    <filter string="My Projects" name="own_projects" domain="[('contributing_users', 'in', [uid])]"/>
+                    <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
+                    <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
+                    <separator/>
+                    <filter string="Open" name="open_project" domain="[('stage_id.fold', '=', False)]"
+                            groups="project.group_project_stages"/>
+                    <filter string="Closed" name="closed_project" domain="[('stage_id.fold', '=', True)]"
+                            groups="project.group_project_stages"/>
+                    <separator/>
+                    <filter string="Start Date" name="start_date" date="date_start"/>
+                    <filter string="End Date" name="end_date" date="date"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
+                            domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all records which has next action date is before today"/>
+                    <filter invisible="1" string="Today Activities" name="activities_today"
+                            domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                            domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Tag" name="tag" context="{'group_by': 'tag_ids'}"/>
+                        <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" name="groupby_stage" context="{'group_by': 'stage_id'}"
+                                groups="project.group_project_stages"/>
+                    </group>
+                </search>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="edit_project" model="ir.ui.view">
+        <field name="name">neokingdom.project.edit_project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='tag_ids']" position="replace">
+                <field name="project_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                       domain="[('id', 'not in', [%(neok_project_management.neok_circle_outreach)d, %(neok_project_management.neok_circle_office)d,
+                       %(neok_project_management.neok_circle_recruiting_hr)d, %(neok_project_management.neok_circle_odoo)d,
+                       %(neok_project_management.neok_circle_dapp)d, %(neok_project_management.neok_circle_smart_contracts)d,
+                       %(neok_project_management.neok_circle_design)d, %(neok_project_management.neok_circle_bizdev)d])]"
+                />
+                <field name="circle_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                       domain="[('id', 'in', [%(neok_project_management.neok_circle_outreach)d, %(neok_project_management.neok_circle_office)d,
+                       %(neok_project_management.neok_circle_recruiting_hr)d, %(neok_project_management.neok_circle_odoo)d,
+                       %(neok_project_management.neok_circle_dapp)d, %(neok_project_management.neok_circle_smart_contracts)d,
+                       %(neok_project_management.neok_circle_design)d, %(neok_project_management.neok_circle_bizdev)d])]"
+                />
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

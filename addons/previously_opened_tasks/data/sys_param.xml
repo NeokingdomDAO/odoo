@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="neok_pot_viable_action_ids" model="ir.config_parameter">
+            <field name="key">neok_pot_viable_action_ids</field>
+            <field name="value" eval="[227, 218, ref('project_view_adaptions.action_view_all_task'), ref('project_view_adaptions.action_view_all_approval_task')]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -4,18 +4,12 @@ from odoo.exceptions import UserError
 class Task(models.Model):
     _inherit = 'project.task'
 
+    # ! user_id is no deprecated, kept here to hold old data, use user_ids instead !
     user_id = fields.Many2one(
         comodel_name='res.users',
         string='Assignee',
-        required=True,
-        tracking=True,
-        default=lambda self: self.env.uid
-    )
-    user_ids = fields.Many2many(
-        comodel_name='res.users',
-        compute='_compute_user_ids',
-        inverse='_inverse_user_ids',
-        store=True
+        required=False,
+        tracking=False
     )
     is_approval_stage = fields.Boolean(
         string='Is Approval Stage',
@@ -26,7 +20,7 @@ class Task(models.Model):
         comodel_name='res.users',
         string='Controller',
         tracking=True,
-        required=True
+        required=False
     )
     approval_date = fields.Date(
         string='Approval Date',
@@ -37,22 +31,13 @@ class Task(models.Model):
     def check_user_and_approval_user_not_equal(self):
         for task in self:
             if task.approval_user_id in task.user_ids:
-                raise UserError(_('Please ensure that no assignee is equal to the controller.'))
+                raise UserError(_('Please ensure the assignee and controller are not the same.'))
 
     @api.constrains('stage_id')
     def check_approval_user_id_set(self):
         for task in self:
             if task.is_approval_stage and not task.approval_user_id:
                 raise UserError(_('Please ensure that a controller is set when the task is in approval stage.'))
-
-    @api.depends('user_id')
-    def _compute_user_ids(self):
-        for task in self:
-            task.user_ids = task.user_id
-
-    def _inverse_user_ids(self):
-        for task in self:
-            task.user_id = task.user_ids[0] if task.user_ids else False
 
     @api.depends('stage_id')
     def _compute_is_approval_stage(self):
