@@ -58,4 +58,48 @@
         </field>
     </record>
 
+    <record id="view_task_form2" model="ir.ui.view">
+        <field name="name">neokingdom.project.task.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+
+            <field name="user_ids" position="before">
+                <field name="project_manager_id"/>
+            </field>
+            <field name="user_ids" position="attributes">
+                <attribute name="string">Contributors</attribute>
+            </field>
+            <xpath expr="//field[@name='project_id']" position="attributes">
+                <attribute name="placeholder"></attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']//field[@name='user_ids']" position="attributes">
+                <attribute name="string">Contributors</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']//field[@name='user_ids']" position="attributes">
+                <attribute name="string">Contributors</attribute>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']//field[@name='employee_id']" position="attributes">
+                <attribute name="string">Contributor</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="view_task_kanban" model="ir.ui.view">
+        <field name="name">neokingdom.project.task.kanban</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='project_id']" position="attributes">
+                <attribute name="placeholder"></attribute>
+            </xpath>
+
+        </field>
+    </record>
+
 </odoo>
