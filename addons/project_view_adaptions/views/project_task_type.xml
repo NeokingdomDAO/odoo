@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="task_type_edit" model="ir.ui.view">
+        <field name="name">neokingdom.project.task.type.form</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='project_ids']" position="after">
+                <field name="default_stage_for_group"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

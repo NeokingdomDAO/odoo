@@ -6,6 +6,41 @@ from odoo import fields, models, api
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        # try to find applicable stages based on project
+        # to include columns (stages) even if they have no record assigned to
+        _project_id = False
+        applicable_stage_ids = False
+
+        if domain:
+            for _domain in domain:
+                if _domain[0] == 'display_project_id':
+                    _project_id = _domain[2]
+
+        if _project_id:
+            # use project specific stages to group
+            applicable_stage_ids = self.env['project.task.type'].search([('project_ids', 'in', [_project_id])])
+        else:
+            # use the default stages to group
+            applicable_stage_ids = self.env['project.task.type'].search([('default_stage_for_group', '=', True)])
+
+        if applicable_stage_ids:
+            stages = applicable_stage_ids
+
+        return super(ProjectTask, self)._read_group_stage_ids(stages, domain, order)
+
+    def _default_project_id(self):
+        # if creating task inside a project
+        # then fill the project field by default with the opened project
+        active_model = self.env.context.get('active_model')
+        active_id = self.env.context.get('active_id')
+
+        if not active_model or not active_id:
+            return False
+
+        return self.env[active_model].browse(active_id).id
+
     tag_ids = fields.Many2many(
         comodel_name='project.tags',
         required=False,
@@ -19,7 +54,7 @@ class ProjectTask(models.Model):
     contributing_users = fields.Many2many('res.users', string='Contributing Users', compute='_compute_contributing_users', store=True, readonly=True)
     stage_id = fields.Many2one(tracking=True)
     name = fields.Char(tracking=True)
-    project_id = fields.Many2one(tracking=True)
+    project_id = fields.Many2one(tracking=True, required=True, default=_default_project_id)
     date_deadline = fields.Date(tracking=True)
     user_ids = fields.Many2many(tracking=True)
     planned_hours = fields.Float(tracking=True)
