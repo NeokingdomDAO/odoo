@@ -13,9 +13,13 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'previously_opened_tasks/static/src/views/renderer.xml',
             'previously_opened_tasks/static/src/views/kanban_renderer.xml',
+            'previously_opened_tasks/static/src/views/list_renderer.xml',
+            'previously_opened_tasks/static/src/js/renderer.js',
             'previously_opened_tasks/static/src/js/kanban_renderer.js',
-            'previously_opened_tasks/static/src/scss/kanban_renderer.scss',
+            'previously_opened_tasks/static/src/js/list_renderer.js',
+            'previously_opened_tasks/static/src/scss/renderer.scss',
         ]
     },
     'installable': True,

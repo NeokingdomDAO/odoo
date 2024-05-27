@@ -8,7 +8,7 @@ class NeokPotProjectTask(models.Model):
 
     def read(self, fields=None, load='_classic_read'):
         # if the returned list length is 1, then its most likely a form open read
-        if len(self) == 1:
+        if not self._context.get('from_web_search_read', False) and len(self) == 1:
             self.env['neok.pot.history'].sudo().create({
                 'task_id': self.id,
                 'user_id': self.env.user.id,

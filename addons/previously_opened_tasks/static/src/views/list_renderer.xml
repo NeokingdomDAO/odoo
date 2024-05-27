@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="previously_opened_tasks.NeokListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <t t-call="previously_opened_tasks.Renderer"/>
+        </xpath>
+    </t>
+
+</templates>

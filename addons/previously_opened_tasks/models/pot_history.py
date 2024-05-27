@@ -11,7 +11,7 @@ class NeokPotHistory(models.Model):
         user_history = self.search([('user_id', '=', self.env.user.id)], order='write_date')
 
         if 'task_id' not in vals_list:
-            return
+            return  # stop create
         elif vals_list['task_id'] in user_history.mapped('task_id').ids:
             # if opened task is already in the history, update create_date field to now
             task_to_edit = user_history.filtered(lambda x: x.task_id.id == vals_list['task_id'])
