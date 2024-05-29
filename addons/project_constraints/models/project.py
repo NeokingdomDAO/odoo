@@ -7,7 +7,7 @@ class Task(models.Model):
     @api.constrains('parent_id', 'date_deadline')
     def check_date_deadline_lower_than_parent(self):
         for task in self:
-            if task.parent_id and task.date_deadline > task.parent_id.date_deadline:
+            if task.parent_id.date_deadline and task.date_deadline and (task.date_deadline > task.parent_id.date_deadline):
                 raise UserError(_('Please ensure that the deadline of the task is not greater than the deadline of the parent task!'))
 
     def write(self, values):
