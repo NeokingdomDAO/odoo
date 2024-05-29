@@ -79,6 +79,20 @@ class ProjectTask(models.Model):
 
                 _task.contributing_users = [(6, 0, list(_contributing_users))]
 
+    def _post_update_project_tags(self):
+        # add task tags to project tags
+        for _task in self:
+            _project_tags = _task.project_id.tag_ids
+            _changed = False
+
+            for _tag in _task.tag_ids:
+                if _tag.id not in _project_tags.ids:
+                    _project_tags += _tag
+                    _changed = True
+
+            if _changed:
+                _task.project_id.tag_ids = _project_tags
+
     def write(self, values):
         changing_desc = 'description' in values
 
@@ -97,6 +111,8 @@ class ProjectTask(models.Model):
                 _task.message_post(body='<p>Description changed</p><p>{0}</p><p>→</p><p>{1}</p>'.format(
                     old_desc.get(_task.id, ''), values["description"]
                 ))
+
+        self._post_update_project_tags()
 
         return res
 
