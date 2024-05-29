@@ -31,7 +31,7 @@
         <field name="name">Tasks</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'search_default_my_tasks': 1}</field>
+        <field name="context">{}</field>
         <field name="search_view_id" ref="project.view_task_search_form_extended"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -49,7 +49,7 @@
         <field name="name">Tasks</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'search_default_my_tasks': 1}</field>
+        <field name="context">{}</field>
         <field name="search_view_id" ref="project.view_task_search_form"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
