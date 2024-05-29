@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import project_project, project_task
+from . import project_project, project_task, project_tags
