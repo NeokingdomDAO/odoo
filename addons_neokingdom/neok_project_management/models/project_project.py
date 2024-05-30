@@ -14,3 +14,8 @@ class ProjectProject(models.Model):
     def _compute_tag_ids(self):
         for project in self:
             project.tag_ids = project.project_tag_ids | project.circle_tag_ids
+
+    def action_add_all_circle_tags(self):
+        self.ensure_one()
+
+        self.circle_tag_ids = self.env['project.tags'].search([('is_circle_tag', '=', True)])

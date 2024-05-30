@@ -4,34 +4,42 @@
 
         <record id="neok_circle_outreach" model="project.tags">
             <field name="name">Circle: Outreach</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_office" model="project.tags">
             <field name="name">Circle: Office</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_recruiting_hr" model="project.tags">
             <field name="name">Circle: Recruiting / HR</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_odoo" model="project.tags">
             <field name="name">Circle: Odoo</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_dapp" model="project.tags">
             <field name="name">Circle: Dapp</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_smart_contracts" model="project.tags">
             <field name="name">Circle: Smart Contracts</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_design" model="project.tags">
             <field name="name">Circle: Design</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
         <record id="neok_circle_bizdev" model="project.tags">
             <field name="name">Circle: BizDev</field>
+            <field name="is_circle_tag" eval="True"/>
         </record>
 
     </data>

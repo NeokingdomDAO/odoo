@@ -14,7 +14,7 @@
                     <field name="name" string="Project"/>
                     <field name="contributing_users" filter_domain="[('contributing_users.name', 'ilike', self), ('contributing_users.active', 'in', [True, False])]"/>
                     <field name="stage_id" groups="project.group_project_stages"/>
-                    <filter string="My Projects" name="own_projects" domain="[('contributing_users', 'in', [uid])]"/>
+                    <filter string="My Contributions" name="own_projects" domain="[('contributing_users', 'in', [uid])]"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
                     <separator/>
@@ -67,6 +67,10 @@
                        %(neok_project_management.neok_circle_dapp)d, %(neok_project_management.neok_circle_smart_contracts)d,
                        %(neok_project_management.neok_circle_design)d, %(neok_project_management.neok_circle_bizdev)d])]"
                 />
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button name="action_add_all_circle_tags" string="Add all circles to tags" type="object" class="btn btn-secondary"/>
             </xpath>
 
         </field>

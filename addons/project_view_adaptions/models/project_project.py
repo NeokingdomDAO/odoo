@@ -47,7 +47,7 @@ class ProjectProject(models.Model):
 
         return result
 
-    @api.depends('user_id', 'task_ids')
+    @api.depends('user_id', 'task_ids', 'task_ids.user_ids')
     def _compute_contributing_users(self):
         for _project in self:
             # project manager is always a contributing user
