@@ -20,6 +20,7 @@ import pytz
 from datetime import date
 from datetime import datetime
 from .graphql_definitions.utils import timezones
+import traceback
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -68,6 +69,7 @@ def handle_graphql(
         env, doc, model_mapping,
         variables={}, operation=None, field_mapping={}, allowed_fields={},
         introspection=False,
+        debug=False,
     ):
     response = {}
     try:
@@ -85,7 +87,10 @@ def handle_graphql(
     except Exception as e:
         _logger.critical(e)
         response["data"] = None
-        response["errors"] = {"message": str(e)}  # + traceback.format_exc()
+        message = str(e)
+        if debug:
+            message += traceback.format_exc()
+        response["errors"] = {"message": message}
     return response
 
 
@@ -172,6 +177,11 @@ def _parse_definition(
         model = model_mapping.get(field.name.value)
         if model is None:
             raise ValidationError("Model {} does not exists".format(field.name.value))
+        
+        # model = model.with_context(edit_translations=True)
+        ctx = parse_context_directives(definition)
+        if ctx:
+            model = model.with_context(**ctx)
         data[fname], _ = parse_model_field(
             model,
             field,
@@ -247,7 +257,8 @@ def inner_subgather(ids, data, limit, offset):
     if isinstance(ids, int):
         return data.get(ids, (None, None))[1]
     if len(ids) == 1:
-        return [data.get(ids[0], (None, None))[1]]
+        res = data.get(ids[0])
+        return [res[1]] if res is not None else []
     # Since the data are gathered in batch, then dispatched,
     # The order is lost and must be done again.
     res = slice_result([
@@ -305,6 +316,19 @@ def make_domain(domain, ids):
             domain = AND([[("id", "=", ids)], domain])
     return domain
 
+CONTEXT_VALUES = {"lang", }
+def parse_context_directives(field):
+    ctx = {}
+    for d in field.directives:
+        if d.name.value != "context":
+            continue
+        for arg in d.arguments:
+            name = arg.name.value
+            if name not in CONTEXT_VALUES:
+                continue
+            value = arg.value.value
+            ctx[name] = value
+    return ctx
 
 # TODO: make it possible to define custom create/write handlers per models
 def retrieve_records(model, field, variables, ids=None, mutation=False, do_limit_offset=False):
@@ -315,6 +339,7 @@ def retrieve_records(model, field, variables, ids=None, mutation=False, do_limit
         - if `domain` directive is defined (even an empty list!), then it will perform a write
           Be very cautious not to provide an empty list and write every records by accident!
     """
+
     domain, kwargs, vals = parse_arguments(field.arguments, variables)
     limit = kwargs.get("limit")
     offset = kwargs.get("offset")
@@ -416,6 +441,9 @@ def parse_model_field(
         This function will in order:
         1. Retrieve the requested records (only the id in )
     """
+    ctx = parse_context_directives(field)
+    if ctx:
+        model = model.with_context(**ctx)
     if variables is None:
         variables = {}
     if allowed_fields is None:
