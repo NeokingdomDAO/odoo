@@ -1,0 +1,11 @@
+<odoo>
+
+    <template id="login" inherit_id="web.login">
+        <xpath expr="//form[hasclass('oe_login_form')]" position="inside">
+            <div>
+                <button id="metamask-login-button">Login with MetaMask</button>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
